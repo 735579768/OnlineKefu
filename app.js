@@ -1,4 +1,4 @@
-//引入程序包
+//引入程序包	
 var express = require('express')
   , path = require('path')
   , db= require('mysql')
@@ -28,9 +28,9 @@ app.use(function(req, res, next) {
   if (!views) {
     views = req.session.views = {}
   }
-  // get the url pathname
+  // get the url pathname 
   var pathname = parseurl(req).pathname
-  // count the views
+  // count the views 
   views[pathname] = (views[pathname] || 0) + 1
   next()
 });
@@ -51,9 +51,9 @@ app.get('/', function(req, res,next){
 
 //每次刷新请求会自己生成一个新的session,如果不加下面代码并不会生成一个新的session
 //req.session.regenerate(function(err) {
-//
+//  
 //});
-
+  
   sessionid=req.sessionID;
   console.log(sessionid);
   res.render('chat',{ title: 'Hey', message: 'Hello there!'});
@@ -80,5 +80,5 @@ res.render('chat',{ title: 'Hey', message: 'Hello there!'});
 //conn.end();
 var sockets=require('./sockets.js')
 sockets.run(io);
-
+ 
 
