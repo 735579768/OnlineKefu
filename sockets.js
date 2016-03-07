@@ -18,6 +18,14 @@ var sockets={
 			}
 			return userlist;
 		};
+		var getusernums=function(roomid){
+			//更新加入房间的人数
+			var romnum=0;
+			for(var a in io.sockets.adapter.rooms[roomid]){
+				romnum++;
+				}
+			return romnum;
+		};
 		//WebSocket连接监听
 		io.on('connection', function (socket) {
 		  // 构造客户端对象
@@ -78,11 +86,7 @@ var sockets={
 			}
 			//对自己进入的房间给别人回复
 
-			//更新加入房间的人数
-			var romnum=0;
-			for(var a in io.sockets.adapter.rooms[roomid]){
-				romnum++;
-				}
+
 /*			//查询用户名列表
 			var userlist=[];
 			for(var a in io.sockets.adapter.rooms[roomid]){
@@ -91,11 +95,12 @@ var sockets={
 				userlist.push(o.username);
 				}*/
 
-			if(client.isadmin==1){
+			if(clientLists[client.roomid]['admin']!=null){
 				//发送给管理员
-				io.sockets.connected[client.socketid].emit('system',getMessage(client,'欢迎\'  '+client.name+'  \'使用客服系统!'));
-				io.sockets.connected[client.socketid].emit('username lists',getuserlist(roomid));
-				io.sockets.connected[client.socketid].emit('usernums','当前房间'+romnum+'个用户');
+				socketid=clientLists[client.roomid]['admin'].socketid;
+				io.sockets.connected[socketid].emit('system',getMessage(client,'欢迎\'  '+client.name+'  \'使用客服系统!'));
+				io.sockets.connected[socketid].emit('username lists',getuserlist(roomid));
+				io.sockets.connected[socketid].emit('usernums','当前'+getusernums(roomid)+'个客户');
 			}
 			//socket.emit('set roomtitle',client);
 			//发送激活状态的聊天室
@@ -132,23 +137,25 @@ var sockets={
 				color:client.color,
 				username:'系统消息',
 				text:client.name+' 已经退出',
+				id:client.socketid
 			  };
 			  //广播用户数量
 			  --numUsers;
 			  //io.sockets.to().emit('system',obj);
 			  //io.sockets.emit('totalusernums','总共'+numUsers+'个用户');
+				if(client.isadmin==0){
+					delete clientLists[client.roomid]['clients'][client.socketid];
+				}else{
+					clientLists[client.roomid]['clients']['admin']=null;
+				}
 			  	//发送给管理员
 			  	if(client.isadmin==0 && clientLists[client.roomid]['admin']!=null){
 				  	socketid=clientLists[client.roomid]['admin'].socketid;
 				  	io.sockets.connected[socketid].emit('userleft',obj);
 					io.sockets.connected[socketid].emit('username lists',getuserlist(client.roomid));
+					io.sockets.connected[socketid].emit('usernums','当前'+getusernums(client.roomid)+'个用户');
 				}
-				if(client.isadmin==0){
-				delete clientLists[client.roomid]['clients'][client.socketid];
-				}else{
-				clientLists[client.roomid]['clients']['admin']=null;
-				}
-				//io.sockets.connected[socketid].emit('usernums','当前房间'+romnum+'个用户');
+
 			  console.log(obj.text);
 			});
 

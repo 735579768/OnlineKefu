@@ -19,10 +19,13 @@ p{line-height:18px;padding:2px;}
 #jihuorooms li{display:inline-block;margin-right:10px;}
 #jihuorooms li a{border:solid 1px #ededed;height:30px;width:60px;line-height:30px;text-align:center;}
 #jihuorooms li a:hover{background:#ededed;}
-.chat_content_title{padding:5px 10px;}
+.chat_content_title{padding:5px 10px;height: 30px;}
 #chat_container{position:relative;}
 #chat_left{position:absolute;height:100%;top:0px;left:0px;width:150px;}
 #friendlist li a{display:block;padding-left:10px;border-bottom:solid 1px #ededed; color:#2E40D0;}
 .friendtitle{font-size:14px;font-weight:bolder;display:block;text-align:center;border-bottom:solid 2px #ededed;margin-bottom:10px;}
 .sendmessage{padding-left:160px;padding-bottom:20px;}
 .sysmsg{margin-bottom:0px;}
+.sysmsg .message-text{color: #aaa;}
+
+#friendlist a.hover{background: #ededed;}

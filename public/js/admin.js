@@ -6,7 +6,9 @@ var input = $('#input');
 var jihuorooms=$('#jihuorooms');
 var myName = myinfo.myname;
 var socket=null;
-window.setSocket=function(id){
+window.setSocket=function(id,obj){
+$('#friendlist a').removeClass('hover');
+$(obj).addClass('hover');
 $('#khid').val(id);
 };
 window.scrollbot=function(){
@@ -79,13 +81,11 @@ window.chatconn=function(){
 		socket.on('usernums',function(msg){
 			$('#numusers').html(msg);
 		});
-		socket.on('totalusernums',function(num){
-			$('#totalnumusers').html(num);
-		});
+
 		socket.on('username lists',function(obj){
 			var str='';
 			for(var a in obj){
-				str+='<li><a onclick="setSocket(\''+obj[a]['id']+'\')" href="javascript:;">'+obj[a]['name']+'<span class="fr pdr10">在线</span></a></li>';
+				str+='<li><a onclick="setSocket(\''+obj[a]['id']+'\',this)" href="javascript:;">'+obj[a]['name']+'<span class="fr pdr10">在线</span></a></li>';
 				}
 			$('#friendlist').html(str);
 		});
