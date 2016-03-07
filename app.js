@@ -47,6 +47,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/room/:id?', function(req, res,next){
   res.send(req.params.id);
 });
+app.get('/chat.html', function(req, res,next){
+  sessionid=req.sessionID;
+  console.log(sessionid);
+  res.render('chat',{ title: 'Hey', message: 'Hello there!'});
+});
+app.get('/login.html', function(req, res,next){
+  sessionid=req.sessionID;
+  console.log(sessionid);
+  res.render('login',{ title: 'Hey', message: 'Hello there!'});
+});
+app.get('/admin.html', function(req, res,next){
+  sessionid=req.sessionID;
+  console.log(sessionid);
+  res.render('admin',{ title: 'Hey', message: 'Hello there!'});
+});
 app.get('/', function(req, res,next){
 
 //每次刷新请求会自己生成一个新的session,如果不加下面代码并不会生成一个新的session

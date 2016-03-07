@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>简单聊天室</title>
+<title>管理员客服首页</title>
 <link rel="stylesheet" type="text/css" href="/css/reset.css" />
 <link rel="stylesheet" type="text/css" href="/css/index.css" />
 <script src="/js/jquery-1.9.1.min.js" type="text/javascript"></script>
@@ -11,6 +11,7 @@
 var myinfo={
 	 roomtitle:'问答聊天大厅',
 	 roomid:1,
+	 isadmin:1,
 	 myname:'游客'+Math.floor(Math.random()*100),
 	 uid:''
 	};
@@ -20,8 +21,21 @@ var myinfo={
 
 <%=title%>
 <div class="container">
+<ul id="jihuorooms" class="cl">
+</ul>
 
+<div class='chat_content_title mgt10 g-bg'><span id="roomtitle"></span>
+<div class="fr">
+<span id="totalnumusers" >总共0个</span>,<span id="numusers" >当前房间0个</span>
+</div>
+</div>
 <div id="chat_container" class="chat_container">
+<div id="chat_left" class="g-bg">
+<span class="friendtitle">客户列表</span>
+<ul id="friendlist">
+
+</ul>
+</div>
 <div id="chat_content" class="g-bg cl"></div>
 </div>
 <div class="sendmessage g-bg">
@@ -35,6 +49,6 @@ var myinfo={
 
 </div>
 </div>
-<script src="/js/chat.js" type="text/javascript"></script>
+<script src="/js/admin.js" type="text/javascript"></script>
 </body>
 </html>

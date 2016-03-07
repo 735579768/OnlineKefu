@@ -34,6 +34,29 @@ window.chatconn=function(){
 			socket.emit('join room',myinfo);
 		});
 
+		//监听system事件，判断welcome或者disconnect，打印系统消息信息
+		socket.on('system',function(json){
+			var str = '';
+			//if(myName==json.text) status.text(myName + ': ').css('color', json.color);
+			//str = '<p style="color:'+json.color+'"> @ '+ json.time+ ' : 欢迎 ' + json.text +'</p>';
+			str='<div class="sysmsg chat-message message-l"><div class="nickname" style="color:[COLOR];">[USERNAME]:@ <span class="message-time">[TIME]</span><div class="message-text" style="display:inline-block;"> [MESSAGE]</div> </div></div>';
+			str=str.replace('[COLOR]','#f00');
+			str=str.replace('[TIME]',json.time);
+			str=str.replace('[MESSAGE]',json.text);
+			str=str.replace('[USERNAME]','系统消息');
+			chat_content.append(str);
+			scrollbot();
+		});
+
+	    socket.on('userleft',function(json){
+			str='<div class="chat-message message-l"><div class="nickname" style="color:[COLOR];">[USERNAME]:@ <span class="message-time">[TIME]</span></div><div class="message-text"> [MESSAGE]</div> </div>';
+			str=str.replace('[COLOR]','#f00');
+			str=str.replace('[TIME]',json.time);
+			str=str.replace('[MESSAGE]',json.text);
+			str=str.replace('[USERNAME]','系统消息');
+			chat_content.append(str);
+			scrollbot();
+		});
 		//监听message事件，打印消息信息
 		socket.on('message',function(json){
 			var str='';
@@ -49,19 +72,32 @@ window.chatconn=function(){
 			chat_content.append(str);
 			scrollbot();
 		});
-		//监听system事件，判断welcome或者disconnect，打印系统消息信息
-		socket.on('system',function(json){
-			var str = '';
-			//if(myName==json.text) status.text(myName + ': ').css('color', json.color);
-			//str = '<p style="color:'+json.color+'"> @ '+ json.time+ ' : 欢迎 ' + json.text +'</p>';
-			str='<div class="sysmsg chat-message message-l"><div class="nickname" style="color:[COLOR];">[USERNAME]:@ <span class="message-time">[TIME]</span><div class="message-text" style="display:inline-block;"> [MESSAGE]</div> </div></div>';
-			str=str.replace('[COLOR]','#f00');
-			str=str.replace('[TIME]',json.time);
-			str=str.replace('[MESSAGE]',json.text);
-			str=str.replace('[USERNAME]','系统消息');
-			chat_content.append(str);
-			scrollbot();
+
+		socket.on('usernums',function(msg){
+			$('#numusers').html(msg);
 		});
+		socket.on('totalusernums',function(num){
+			$('#totalnumusers').html(num);
+		});
+		socket.on('username lists',function(obj){
+			var str='';
+			for(var a in obj){
+				str+='<li><a href="javascript:;">'+obj[a]+'<span class="fr pdr10">在线</span></a></li>';
+				}
+			$('#friendlist').html(str);
+		});
+		socket.on('room number',function(obj){
+			//console.log(obj);
+			var str='';
+			for(var a in obj){
+				str+='<li><a href="javascript:;" onclick="joinroom(\''+a+'\');">'+a+'</a></li>';
+				}
+			jihuorooms.html(str);
+
+		});
+		socket.on('set roomtitle',function(msg){
+			$('#roomtitle').html(myinfo.roomid+'：'+myinfo.roomtitle);
+			});
 		socket.on('debug',function(obj){
 			console.log(obj);
 		});
