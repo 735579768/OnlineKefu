@@ -113,9 +113,10 @@ window.chatconn=function(){
 				return false;
 				}
 			var msg = $(this).val();
-			var socketid=$('#socketid').val();
+			var socketid=$('#khid').val();
 			if (!msg) return;
-			socket.emit('message',[socketid,msg]);
+			var data={'id':socketid,'msg':msg};
+			socket.emit('message',$.toJSON(data));
 			$(this).val('');
 		}
 	});

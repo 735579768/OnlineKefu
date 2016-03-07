@@ -75,7 +75,8 @@ window.chatconn=function(){
 				}
 			var msg = $(this).val();
 			if (!msg) return;
-			socket.emit('message',msg);
+			var data={'id':'','msg':msg};
+			socket.emit('message',$.toJSON(data));
 			$(this).val('');
 		}
 	});
