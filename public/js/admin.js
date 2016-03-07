@@ -6,6 +6,9 @@ var input = $('#input');
 var jihuorooms=$('#jihuorooms');
 var myName = myinfo.myname;
 var socket=null;
+window.setSocket=function(id){
+$('#khid').val(id);
+};
 window.scrollbot=function(){
 	var sh=chat_content[0].scrollHeight;
 	var h=chat_content.height();
@@ -82,7 +85,7 @@ window.chatconn=function(){
 		socket.on('username lists',function(obj){
 			var str='';
 			for(var a in obj){
-				str+='<li><a href="javascript:;">'+obj[a]+'<span class="fr pdr10">在线</span></a></li>';
+				str+='<li><a onclick="setSocket(\''+obj[a]['id']+'\')" href="javascript:;">'+obj[a]['name']+'<span class="fr pdr10">在线</span></a></li>';
 				}
 			$('#friendlist').html(str);
 		});
@@ -110,8 +113,9 @@ window.chatconn=function(){
 				return false;
 				}
 			var msg = $(this).val();
+			var socketid=$('#socketid').val();
 			if (!msg) return;
-			socket.emit('message',msg);
+			socket.emit('message',[socketid,msg]);
 			$(this).val('');
 		}
 	});

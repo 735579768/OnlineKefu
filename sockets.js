@@ -7,6 +7,17 @@ var sockets={
 	run:function(io){
 		var numUsers = 0;
 		var clientLists={};
+		//返回当前房间用户
+		var getuserlist=function(roomid){
+		  	//查询用户名列表
+			var userlist=[];
+			for(var a in io.sockets.adapter.rooms[roomid]){
+				//console.log(a);
+				var o=io.sockets.connected[a];
+				userlist.push({'id':o.id,'name':o.username});
+			}
+			return userlist;
+		};
 		//WebSocket连接监听
 		io.on('connection', function (socket) {
 		  // 构造客户端对象
@@ -60,26 +71,27 @@ var sockets={
 
 			socket.join(roomid);
 			//对自己进入的前房间进行回复
-			socket.emit('system',getMessage(client,'您已进入'+roomid+'号房间'));
+			socket.emit('system',getMessage(client,'请问您有什么问题吗?'));
 			//对自己进入的房间给别人回复
-			socket.broadcast.to(roomid).emit('system',getMessage(client,'欢迎\'  '+client.name+'  \'进入聊天室'));
+
 			//更新加入房间的人数
 			var romnum=0;
 			for(var a in io.sockets.adapter.rooms[roomid]){
 				romnum++;
 				}
-			//查询用户名列表
+/*			//查询用户名列表
 			var userlist=[];
 			for(var a in io.sockets.adapter.rooms[roomid]){
 				console.log(a);
 				var o=io.sockets.connected[a];
 				userlist.push(o.username);
-				}
+				}*/
 
 			if(clientLists[myinfo.roomid]['admin']!=null){
 				//发送给管理员
 				socketid=clientLists[myinfo.roomid]['admin'].socketid;
-				io.sockets.connected[socketid].emit('username lists',userlist);
+				io.sockets.connected[socketid].emit('system',getMessage(client,'欢迎\'  '+client.name+'  \'进入聊天室'));
+				io.sockets.connected[socketid].emit('username lists',getuserlist(roomid));
 				io.sockets.connected[socketid].emit('usernums','当前房间'+romnum+'个用户');
 			}
 			//socket.emit('set roomtitle',client);
@@ -89,10 +101,19 @@ var sockets={
 
 		  // 对message事件的监听
 		  socket.on('message', function(msg){
+		  		var khid='';
+		  		if(typeof(msg)==typeof([])){
+		  			msg=msg[1];
+		  			khid=msg[0];
+		  		}
 				//取当前实例所在房间
-				for(var a in socket.rooms){
-				 io.sockets.to(socket.rooms[a]).emit('message',getMessage(client,msg));
+				if(client.isadmin==0){
+					io.sockets.connected[client.socketid].emit('message',getMessage(client,msg));
+				}else{
+					io.sockets.connected[khid].emit('message',getMessage(client,msg));
 				}
+				socketid=clientLists[client.roomid]['admin'].socketid;
+				io.sockets.connected[socketid].emit('message',getMessage(client,msg));
 			});
 			//监听出退事件
 		  socket.on('disconnect', function () {
@@ -107,16 +128,11 @@ var sockets={
 			  //io.sockets.to().emit('system',obj);
 			  //io.sockets.emit('totalusernums','总共'+numUsers+'个用户');
 			  	//发送给管理员
-			  				//查询用户名列表
-				var userlist=[];
-				for(var a in io.sockets.adapter.rooms[client.roomid]){
-					console.log(a);
-					var o=io.sockets.connected[a];
-					userlist.push(o.username);
+			  	if(clientLists[client.roomid]['admin']!=null){
+				  	socketid=clientLists[client.roomid]['admin'].socketid;
+				  	io.sockets.connected[socketid].emit('userleft',obj);
+					io.sockets.connected[socketid].emit('username lists',getuserlist(client.roomid));
 				}
-			  	socketid=clientLists[client.roomid]['admin'].socketid;
-			  	io.sockets.connected[socketid].emit('userleft',obj);
-				io.sockets.connected[socketid].emit('username lists',userlist);
 				//io.sockets.connected[socketid].emit('usernums','当前房间'+romnum+'个用户');
 			  console.log(obj.text);
 			});
