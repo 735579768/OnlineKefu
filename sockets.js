@@ -22,7 +22,13 @@ var sockets={
 			//更新加入房间的人数
 			var romnum=0;
 			for(var a in io.sockets.adapter.rooms[roomid]){
-				romnum++;
+				var adminid='';
+				if(clientLists[roomid]['admin']!=null){
+					adminid=clientLists[roomid]['admin'].socketid;
+				}
+				if(a.id!=adminid){
+					romnum++;
+				}
 				}
 			return romnum;
 		};
@@ -153,8 +159,7 @@ var sockets={
 					io.sockets.connected[socketid].emit('username lists',getuserlist(client.roomid));
 					io.sockets.connected[socketid].emit('usernums','当前'+getusernums(client.roomid)+'个用户');
 				}
-
-			  console.log(obj.text);
+			  console.log('当前用户'+getusernums(client.roomid)+'个');
 			});
 
 		  socket.on('error', function (err) {
