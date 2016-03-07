@@ -109,18 +109,14 @@ var sockets={
 
 		  // 对message事件的监听
 		  socket.on('message', function(msg){
-		  	console.log(msg);
-		  	msg=eval('(' + msg + ')');
-		  	console.log(msg.id);
+		  		msg=eval('(' + msg + ')');
 		  		//msg=eval(msg);
 				var khid=msg.id;
 		  		msg=msg.msg;
-
-		  		//khid=msg;
-		  		//对自己进行回复
-		  		io.sockets.connected[client.socketid].emit('message',getMessage(client,msg));
-
-		  		console.log('khid:',khid);
+		  		if(client.isadmin==1 && !khid){
+		  			io.sockets.connected[client.socketid].emit('system',getMessage(client,'请选择一个客户!'));
+		  			return false;
+		  		}
 				//如果是管理员,对指定客户回复
 				if(client.isadmin==1){
 					io.sockets.connected[khid].emit('message',getMessage(client,msg));
@@ -129,6 +125,8 @@ var sockets={
 					socketid=clientLists[client.roomid]['admin'].socketid;
 					io.sockets.connected[socketid].emit('message',getMessage(client,msg));
 				}
+		  		//对自己进行回复
+		  		io.sockets.connected[client.socketid].emit('message',getMessage(client,msg));
 			});
 			//监听出退事件
 		  socket.on('disconnect', function () {
