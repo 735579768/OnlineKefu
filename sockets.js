@@ -107,10 +107,17 @@ var sockets={
 			  //io.sockets.to().emit('system',obj);
 			  //io.sockets.emit('totalusernums','总共'+numUsers+'个用户');
 			  	//发送给管理员
+			  				//查询用户名列表
+				var userlist=[];
+				for(var a in io.sockets.adapter.rooms[client.roomid]){
+					console.log(a);
+					var o=io.sockets.connected[a];
+					userlist.push(o.username);
+				}
 			  	socketid=clientLists[client.roomid]['admin'].socketid;
 			  	io.sockets.connected[socketid].emit('userleft',obj);
 				io.sockets.connected[socketid].emit('username lists',userlist);
-				io.sockets.connected[socketid].emit('usernums','当前房间'+romnum+'个用户');
+				//io.sockets.connected[socketid].emit('usernums','当前房间'+romnum+'个用户');
 			  console.log(obj.text);
 			});
 

@@ -49,7 +49,7 @@ window.chatconn=function(){
 		});
 
 	    socket.on('userleft',function(json){
-			str='<div class="chat-message message-l"><div class="nickname" style="color:[COLOR];">[USERNAME]:@ <span class="message-time">[TIME]</span></div><div class="message-text"> [MESSAGE]</div> </div>';
+			str='<div class="sysmsg chat-message message-l"><div class="nickname" style="color:[COLOR];">[USERNAME]:@ <span class="message-time">[TIME]</span><div class="message-text" style="display:inline-block;"> [MESSAGE]</div> </div></div>';
 			str=str.replace('[COLOR]','#f00');
 			str=str.replace('[TIME]',json.time);
 			str=str.replace('[MESSAGE]',json.text);
