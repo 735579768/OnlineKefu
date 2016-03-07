@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>简单聊天室</title>
+<link rel="stylesheet" type="text/css" href="/css/reset.css" />
+<link rel="stylesheet" type="text/css" href="/css/index.css" />
+<script src="/js/jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/socket.io/socket.io.js" type="text/javascript"></script>
+<script>
+var myinfo={
+	 roomtitle:'问答聊天大厅',
+	 roomid:1,
+	 myname:'游客'+Math.floor(Math.random()*100),
+	 uid:''
+	};
+</script>
+</head>
+<body>
+
+<%=title%>
+<div class="container">
+<ul class="room cl">
+<li><a href="javascript:;" onClick="joinroom(1,'问答聊天大厅');">1号大厅</a></li>
+<li><a href="javascript:;" onClick="joinroom(2,'js大厅');">2号房</a></li>
+<li><a href="javascript:;"  onClick="joinroom(3,'php大厅');">3号房</a></li>
+<li><a href="javascript:;"  onClick="joinroom(4,'java大厅');">4号房</a></li>
+<li><a href="javascript:;"  onClick="joinroom(5,'android大厅');">5号房</a></li>
+</ul>
+<ul id="jihuorooms" class="cl">
+</ul>
+
+<div class='chat_content_title mgt10 g-bg'><span>位置：</span><span id="roomtitle"></span>
+<div class="fr">
+<span id="totalnumusers" >总共0个</span>,<span id="numusers" >当前房间0个</span>
+</div>
+</div>
+<div id="chat_container" class="chat_container">
+<div id="chat_left" class="g-bg">
+<span class="friendtitle">朋友列表</span>
+<ul id="friendlist">
+
+</ul>
+</div>
+<div id="chat_content" class="g-bg cl"></div>
+</div>
+<div class="sendmessage g-bg">
+
+
+<a href="javascript:;" onClick="chatconn();" class="btn hide">连接</a>
+<a href="javascript:;" onClick="disconn();" class="btn hide">断开连接</a>
+<div  id="status">未连接</div>
+<textarea type="text" class="form-control" id="input"></textarea>
+
+
+</div>
+</div>
+<script src="/js/chat.js" type="text/javascript"></script>
+</body>
+</html>
