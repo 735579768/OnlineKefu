@@ -1,7 +1,6 @@
 //引入程序包
 var express = require('express')
   , path = require('path')
-  , db= require('mysql')
  // , rooms= require('./rooms.js')
   , parseurl = require('parseurl')
   , session = require('express-session')
@@ -78,21 +77,6 @@ app.all('*', function(req,res){
 res.render('chat',{ title: 'Hey', message: 'Hello there!'});
 });
 
-
-
-//数据库连接
-//var conn = db.createConnection({
-//  host     : 'localhost',
-//  user     : 'root',
-//  password : 'adminrootkl',
-//  database : 'ainiku'
-//});
-//conn.connect();
-//conn.query('SELECT * from kl_picture limit 1', function(err, rows, fields) {
-//  if (err) throw err;
-//  console.log('The solution is: ', rows);
-//});
-//conn.end();
 var sockets=require('./sockets.js')
 sockets.run(io);
 

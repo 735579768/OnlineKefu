@@ -3,6 +3,20 @@ var debug=function(obj){
 	console.log(obj);
 	 //io.sockets.emit('debug',obj);
 	};
+//数据库连接
+ var db= require('mysql')
+var conn = db.createConnection({
+ host     : 'localhost',
+ user     : 'root',
+ password : 'adminrootkl',
+ database : 'onlinekefu'
+});
+conn.connect();
+conn.query('SELECT * from kl_kefu limit 10', function(err, rows, fields) {
+ if (err) throw err;
+ console.log( rows,fields);
+});
+conn.end();
 var sockets={
 	socketClients:{},
 	run:function(io){
