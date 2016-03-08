@@ -4,7 +4,9 @@ var debug=function(obj){
 	 //io.sockets.emit('debug',obj);
 	};
 var sockets={
+	socketClients:{},
 	run:function(io){
+		var _this=this;
 		var numUsers = 0;
 		var clientLists={};
 		//返回当前房间用户
@@ -31,6 +33,14 @@ var sockets={
 				}
 				}
 			return romnum;
+		};
+		//发送消息
+		var sendmessage=function(socket,msgtype,msg){
+			if(socket){
+				socket.emit(msgtype,msg);
+			}else{
+				return false;
+			}
 		};
 		//WebSocket连接监听
 		io.on('connection', function (socket) {
@@ -65,13 +75,17 @@ var sockets={
 			var roomid=myinfo.roomid;
 
 			if(clientLists[myinfo.roomid]){
-		    	clientLists[myinfo.roomid]['clients'][client.socketid]=client;
+				if(client.isadmin==1){
+					clientLists[myinfo.roomid]['admin']=client;
+				}else{
+					clientLists[myinfo.roomid]['clients'][client.socketid]=client;
+				}
+
 			}else{
 				clientLists[myinfo.roomid]={'admin':null,'clients':{}};
 			}
-			if(client.isadmin==1){
-				clientLists[myinfo.roomid]['admin']=client;
-			}
+
+			_this.socketClients=clientLists;
 			//console.log(clientLists);
 /*
 			//更新离开房间的人数
@@ -85,10 +99,11 @@ var sockets={
 
 			socket.join(roomid);
 			//对自己进行回复
+			var soc=io.sockets.connected[client.socketid];
 			if(client.isadmin==1){
-				io.sockets.connected[client.socketid].emit('system',getMessage(client,'成功登陆客服系统!'));
+				sendmessage(soc,'system',getMessage(client,'成功登陆客服系统!'));
 			}else{
-				io.sockets.connected[client.socketid].emit('system',getMessage(client,'请问您有什么问题吗?'));
+				sendmessage(soc,'system',getMessage(client,'请问您有什么问题吗?'));
 			}
 			//对自己进入的房间给别人回复
 
@@ -105,9 +120,9 @@ var sockets={
 				//发送给管理员
 				socketid=clientLists[client.roomid]['admin'].socketid;
 				var soc=io.sockets.connected[socketid];
-				soc.emit('system',getMessage(client,'欢迎\'  '+client.name+'  \'使用客服系统!'));
-				soc.emit('username lists',getuserlist(roomid));
-				soc.emit('usernums','当前'+getusernums(roomid)+'个客户');
+				sendmessage(soc,'system',getMessage(client,'欢迎\'  '+client.name+'  \'使用客服系统!'));
+				sendmessage(soc,'username lists',getuserlist(roomid));
+				sendmessage(soc,'usernums','当前'+getusernums(roomid)+'个客户');
 			}
 			//socket.emit('set roomtitle',client);
 			//发送激活状态的聊天室
@@ -121,22 +136,23 @@ var sockets={
 				var khid=msg.id;
 		  		msg=msg.msg;
 		  		if(client.isadmin==1 && !khid){
-		  			io.sockets.connected[client.socketid].emit('system',getMessage(client,'请选择一个客户!'));
+		  			sendmessage( io.sockets.connected[client.socketid],'system',getMessage(client,'请选择一个客户!'));
 		  			return false;
 		  		}
 				//如果是管理员,对指定客户回复
 				if(client.isadmin==1){
-					io.sockets.connected[khid].emit('message',getMessage(client,msg));
+					sendmessage(io.sockets.connected[khid],'message',getMessage(client,msg));
 				}else{
 					//否则转发给管理员
 					socketid=clientLists[client.roomid]['admin'].socketid;
-					io.sockets.connected[socketid].emit('message',getMessage(client,msg));
+					sendmessage( io.sockets.connected[socketid],'message',getMessage(client,msg));
 				}
 		  		//对自己进行回复
-		  		io.sockets.connected[client.socketid].emit('message',getMessage(client,msg));
+		  		sendmessage(io.sockets.connected[client.socketid],'message',getMessage(client,msg));
 			});
 			//监听出退事件
 		  socket.on('disconnect', function () {
+		  	try{
 			  var obj = {
 				time:getTime(),
 				color:client.color,
@@ -148,19 +164,27 @@ var sockets={
 			  --numUsers;
 			  //io.sockets.to().emit('system',obj);
 			  //io.sockets.emit('totalusernums','总共'+numUsers+'个用户');
+
 				if(client.isadmin==0){
 					delete clientLists[client.roomid]['clients'][client.socketid];
 				}else{
-					clientLists[client.roomid]['clients']['admin']=null;
+					clientLists[client.roomid]['admin']=null;
+				}
+				if(!clientLists[client.roomid]['clients'] &&!clientLists[client.roomid]['admin']){
+					delete clientLists[client.roomid];
 				}
 			  	//发送给管理员
 			  	if(client.isadmin==0 && clientLists[client.roomid]['admin']!=null){
 				  	socketid=clientLists[client.roomid]['admin'].socketid;
-				  	io.sockets.connected[socketid].emit('userleft',obj);
-					io.sockets.connected[socketid].emit('username lists',getuserlist(client.roomid));
-					io.sockets.connected[socketid].emit('usernums','当前'+getusernums(client.roomid)+'个用户');
+				  	var soc=io.sockets.connected[socketid];
+				  	sendmessage(soc,'userleft',obj);
+					sendmessage(soc,'username lists',getuserlist(client.roomid));
+					sendmessage(soc,'usernums','当前'+getusernums(client.roomid)+'个用户');
 				}
 			  console.log('当前用户'+getusernums(client.roomid)+'个');
+			  }catch(e){
+			  	console.log(e);
+			  }
 			});
 
 		  socket.on('error', function (err) {
