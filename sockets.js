@@ -104,9 +104,10 @@ var sockets={
 			if(clientLists[client.roomid]['admin']!=null){
 				//发送给管理员
 				socketid=clientLists[client.roomid]['admin'].socketid;
-				io.sockets.connected[socketid].emit('system',getMessage(client,'欢迎\'  '+client.name+'  \'使用客服系统!'));
-				io.sockets.connected[socketid].emit('username lists',getuserlist(roomid));
-				io.sockets.connected[socketid].emit('usernums','当前'+getusernums(roomid)+'个客户');
+				var soc=io.sockets.connected[socketid];
+				soc.emit('system',getMessage(client,'欢迎\'  '+client.name+'  \'使用客服系统!'));
+				soc.emit('username lists',getuserlist(roomid));
+				soc.emit('usernums','当前'+getusernums(roomid)+'个客户');
 			}
 			//socket.emit('set roomtitle',client);
 			//发送激活状态的聊天室
