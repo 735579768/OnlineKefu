@@ -1,4 +1,6 @@
-
+if(typeof(console)=='undefined'){
+	window.console=function(){};
+}
 $(function () {
 var chat_content = $('#chat_content');
 var status = $('#status');
@@ -6,6 +8,9 @@ var msg_input = $('#msg_input');
 var jihuorooms=$('#jihuorooms');
 var myName = myinfo.myname;
 var socket=null;
+window.selectkefu=function(id){
+
+};
 window.scrollbot=function(){
 	var sh=chat_content[0].scrollHeight;
 	var h=chat_content.height();
@@ -71,6 +76,24 @@ window.chatconn=function(){
 		});
 		socket.on('debug',function(obj){
 			console.log(obj);
+		});
+		socket.on('select kefu',function(obj){
+			console.log(obj);
+			var str = '';
+			var kf='<span class="selectkefu"><span>请选择客服：</span>';
+			for(i in obj.text){
+				kf+='<a href="javascript:;" onclick="selectkefu(\''+obj.text[i]['id']+'\')">'+obj.text[i]['name']+'</a>';
+			}
+			kf+='</span>';
+			//if(myName==json.text) status.text(myName + ': ').css('color', json.color);
+			//str = '<p style="color:'+json.color+'"> @ '+ json.time+ ' : 欢迎 ' + json.text +'</p>';
+			str='<div class="sysmsg chat-message message-l"><div class="nickname" style="color:[COLOR];">[USERNAME]:@ <span class="message-time">[TIME]</span><div class="message-text" style="display:inline-block;"> [MESSAGE]</div> </div></div>';
+			str=str.replace('[COLOR]','#f00');
+			str=str.replace('[TIME]',obj.time);
+			str=str.replace('[MESSAGE]',kf);
+			str=str.replace('[USERNAME]','系统消息');
+			chat_content.append(str);
+			scrollbot();
 		});
 	};
 	//通过“回车”提交聊天信息

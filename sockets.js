@@ -104,6 +104,7 @@ var sockets={
 				sendmessage(soc,'system',getMessage(client,'成功登陆客服系统!'));
 			}else{
 				sendmessage(soc,'system',getMessage(client,'请问您有什么问题吗?'));
+				sendmessage(soc,'select kefu',getMessage(client,[{'id':1,'name':'客服1'},{'id':2,'name':'客服2'},{'id':3,'name':'客服3'}]));
 			}
 			//对自己进入的房间给别人回复
 
@@ -124,6 +125,7 @@ var sockets={
 				sendmessage(soc,'username lists',getuserlist(roomid));
 				sendmessage(soc,'usernums','当前'+getusernums(roomid)+'个客户');
 			}
+
 			//socket.emit('set roomtitle',client);
 			//发送激活状态的聊天室
 			//io.sockets.emit('room number',io.sockets.adapter.rooms);
