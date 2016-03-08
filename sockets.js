@@ -186,7 +186,7 @@ var sockets={
 					//否则转发给管理员
 					socketid=clientLists[client.roomid]['admin'].socketid;
 					sendmessage( io.sockets.connected[socketid],'message',getMessage(client,msg));
-					else{
+					}else{
 						//临时存到数据库
 					}
 				}
