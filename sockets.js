@@ -12,15 +12,17 @@ var conn = db.createConnection({
  database : 'onlinekefu'
 });
 conn.connect();
-conn.query('SELECT * from kl_kefu limit 10', function(err, rows, fields) {
- if (err) throw err;
-for(i in rows){
-console.log(rows[i]['kefu_id']);
-console.log(rows[i]['name']);
- //console.log( rows,fields);
-}
-});
-conn.end();
+var mysqlquery=function(sql,callback){
+	conn.connect();
+	conn.query('SELECT * from kl_kefu limit 10', function(err, rows, fields) {
+	 if (err) throw err;
+	for(i in rows){
+	console.log(rows[i]['kefu_id']);
+	console.log(rows[i]['name']);
+	}
+	});
+	conn.end();
+};
 var sockets={
 	socketClients:{},
 	run:function(io){
@@ -30,26 +32,30 @@ var sockets={
 		//返回当前房间用户
 		var getuserlist=function(roomid){
 		  	//查询用户名列表
-			var userlist=[];
+/*			var userlist=[];
 			for(var a in io.sockets.adapter.rooms[roomid]){
 				//console.log(a);
 				var o=io.sockets.connected[a];
 				userlist.push({'id':o.id,'name':o.username});
+			}
+			return userlist;*/
+			var userlist=[];
+			for(var a in clientLists[roomid]['clients']){
+				//console.log(a);
+				var o=clientLists[roomid]['clients'][a];
+				userlist.push({'id':o.id,'name':o.name});
 			}
 			return userlist;
 		};
 		var getusernums=function(roomid){
 			//更新加入房间的人数
 			var romnum=0;
-			for(var a in io.sockets.adapter.rooms[roomid]){
-				var adminid='';
-				if(clientLists[roomid]['admin']!=null){
-					adminid=clientLists[roomid]['admin'].socketid;
-				}
-				if(a.id!=adminid){
+/*			for(var a in io.sockets.adapter.rooms[roomid]){
 					romnum++;
-				}
-				}
+				}*/
+			for(var a in clientLists[roomid]['clients']){
+				romnum++;
+			}
 			return romnum;
 		};
 		//发送消息
@@ -122,7 +128,20 @@ var sockets={
 				sendmessage(soc,'system',getMessage(client,'成功登陆客服系统!'));
 			}else{
 				sendmessage(soc,'system',getMessage(client,'请问您有什么问题吗?'));
-				sendmessage(soc,'select kefu',getMessage(client,[{'id':1,'name':'客服1'},{'id':2,'name':'客服2'},{'id':3,'name':'客服3'}]));
+				//sendmessage(soc,'select kefu',getMessage(client,[{'id':1,'name':'客服1'},{'id':2,'name':'客服2'},{'id':3,'name':'客服3'}]));
+			try{
+				conn.query('SELECT * from kl_kefu limit 10', function(err, rows, fields) {
+				if (err) throw err;
+				var kefulist=[];
+				for(i in rows){
+					kefulist.push({'id':rows[i]['kefu_id'],'name':rows[i]['name']})
+				}
+				sendmessage(soc,'select kefu',getMessage(client,kefulist));
+				});
+				//conn.end();
+			}catch(e){
+				console.log(e);
+			}
 			}
 			//对自己进入的房间给别人回复
 
