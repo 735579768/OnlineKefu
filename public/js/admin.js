@@ -2,7 +2,7 @@
 $(function () {
 var chat_content = $('#chat_content');
 var status = $('#status');
-var input = $('#input');
+var msg_input = $('#msg_input');
 var jihuorooms=$('#jihuorooms');
 var myName = myinfo.myname;
 var socket=null;
@@ -27,6 +27,14 @@ window.disconn=function(){
 	socket=null;
 	status.text('未连接');
 	};
+window.sendmsg=function(){
+	var msg = msg_input.val();
+	var socketid=$('#khid').val();
+	if (!msg) return;
+	var data={'id':socketid,'msg':msg};
+	socket.emit('message',$.toJSON(data));
+	msg_input.val('');
+};
 window.chatconn=function(){
 		if(socket)return;
 			//建立websocket连接对象
@@ -106,7 +114,7 @@ window.chatconn=function(){
 		});
 	};
 	//通过“回车”提交聊天信息
-	input.keydown(function(e) {
+/*	msg_input.keydown(function(e) {
 		if (e.keyCode === 13) {
 			if(!socket){
 				alert('没有连接');
@@ -119,6 +127,6 @@ window.chatconn=function(){
 			socket.emit('message',$.toJSON(data));
 			$(this).val('');
 		}
-	});
+	});*/
 chatconn();
 });
