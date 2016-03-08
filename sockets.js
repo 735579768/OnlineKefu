@@ -14,7 +14,11 @@ var conn = db.createConnection({
 conn.connect();
 conn.query('SELECT * from kl_kefu limit 10', function(err, rows, fields) {
  if (err) throw err;
- console.log( rows,fields);
+for(i in rows){
+console.log(rows[i]['kefu_id']);
+console.log(rows[i]['name']);
+ //console.log( rows,fields);
+}
 });
 conn.end();
 var sockets={
