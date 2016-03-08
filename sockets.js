@@ -182,9 +182,13 @@ var sockets={
 				if(client.isadmin==1){
 					sendmessage(io.sockets.connected[khid],'message',getMessage(client,msg));
 				}else{
+					if(clientLists[client.roomid]['admin']){
 					//否则转发给管理员
 					socketid=clientLists[client.roomid]['admin'].socketid;
 					sendmessage( io.sockets.connected[socketid],'message',getMessage(client,msg));
+					else{
+						//临时存到数据库
+					}
 				}
 		  		//对自己进行回复
 		  		sendmessage(io.sockets.connected[client.socketid],'message',getMessage(client,msg));
