@@ -80,10 +80,13 @@ app.get('/room/:id?', function(req, res, next) {
 });
 
 app.get('/chat.html', function(req, res, next) {
+   res.send('error');
     sessionid = req.sessionID;
     console.log(sessionid);
     res.render('chat', { serverip: clientip, title: 'Hey', message: 'Hello there!' });
 });
+
+
 app.get('/login.html', function(req, res, next) {
     if (req.session['islogin']) {
         res.redirect('/admin.html')
@@ -152,7 +155,7 @@ app.get('/', function(req, res, next) {
     //req.session.regenerate(function(err) {
     //
     //});
-
+ res.send('error');
     sessionid = req.sessionID;
     console.log(sessionid);
     res.render('chat', { serverip: clientip, title: 'Hey', message: 'Hello there!' });
