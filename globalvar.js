@@ -25,11 +25,16 @@ global.getTime = function() {
     m = m > 9 ? m : ('0' + m)
     s = s > 9 ? s : ('0' + s)
     return h + ":" + m + ":" + s;
-}
+};
 
 global.getColor = function() {
     return '#666;';
-}
+};
+global.filtersql=function(str){
+    var re=/and|delete|or|exec|insert|select|union|update|count|*|'|join|>|</;
+    str=str.replace(re,'');
+    return str;
+};
 global.socketrooms = function() {
     this.rooms = {};
 };
