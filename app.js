@@ -81,9 +81,6 @@ app.get('/room/:id?', function(req, res, next) {
 
 app.get('/chat.html', function(req, res, next) {
    res.send('error');
-    sessionid = req.sessionID;
-    console.log(sessionid);
-    res.render('chat', { serverip: clientip, title: 'Hey', message: 'Hello there!' });
 });
 
 
@@ -91,8 +88,6 @@ app.get('/login.html', function(req, res, next) {
     if (req.session['islogin']) {
         res.redirect('/admin.html')
     }
-    sessionid = req.sessionID;
-    console.log(sessionid);
     res.render('login', { serverip: clientip, title: 'Hey', message: 'Hello there!' });
 });
 
@@ -103,7 +98,6 @@ app.get('/logout.html', function(req, res, next) {
     req.session['nickname'] = null;
     req.session['kefu_id'] = null;
     req.session['room_id'] = null;
-    global.uinfo=null;
     res.redirect('/login.html')
 });
 
@@ -162,6 +156,7 @@ app.get('/', function(req, res, next) {
 });
 
 app.all('*', function(req, res) {
+   res.send('error');
     res.render('chat', { serverip: clientip, title: 'Hey', message: 'Hello there!' });
 });
 
