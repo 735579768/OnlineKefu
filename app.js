@@ -8,6 +8,9 @@ var express = require('express')
   , server = require('http').createServer(app)
   , io = require('socket.io').listen(server);
  var port = process.env.PORT || 4000;
+
+ //客户端服务器IP/端口
+var clientip='http://127.0.0.1:4000';
 //引入全局变量
 require('./globalvar.js')
 
@@ -49,17 +52,17 @@ app.get('/room/:id?', function(req, res,next){
 app.get('/chat.html', function(req, res,next){
   sessionid=req.sessionID;
   console.log(sessionid);
-  res.render('chat',{ title: 'Hey', message: 'Hello there!'});
+  res.render('chat',{serverip:clientip, title: 'Hey', message: 'Hello there!'});
 });
 app.get('/login.html', function(req, res,next){
   sessionid=req.sessionID;
   console.log(sessionid);
-  res.render('login',{ title: 'Hey', message: 'Hello there!'});
+  res.render('login',{serverip:clientip, title: 'Hey', message: 'Hello there!'});
 });
 app.get('/admin.html', function(req, res,next){
   sessionid=req.sessionID;
   console.log(sessionid);
-  res.render('admin',{ title: 'Hey', message: 'Hello there!'});
+  res.render('admin',{serverip:clientip, title: 'Hey', message: 'Hello there!'});
 });
 app.get('/', function(req, res,next){
 
@@ -70,11 +73,11 @@ app.get('/', function(req, res,next){
 
   sessionid=req.sessionID;
   console.log(sessionid);
-  res.render('chat',{ title: 'Hey', message: 'Hello there!'});
+  res.render('chat',{serverip:clientip, title: 'Hey', message: 'Hello there!'});
 });
 
 app.all('*', function(req,res){
-res.render('chat',{ title: 'Hey', message: 'Hello there!'});
+res.render('chat',{serverip:clientip, title: 'Hey', message: 'Hello there!'});
 });
 
 var sockets=require('./sockets.js')
