@@ -150,14 +150,10 @@ app.get('/', function(req, res, next) {
     //
     //});
  res.send('error');
-    sessionid = req.sessionID;
-    console.log(sessionid);
-    res.render('chat', { serverip: clientip, title: 'Hey', message: 'Hello there!' });
 });
 
 app.all('*', function(req, res) {
    res.send('error');
-    res.render('chat', { serverip: clientip, title: 'Hey', message: 'Hello there!' });
 });
 
 var sockets = require('./sockets.js')
