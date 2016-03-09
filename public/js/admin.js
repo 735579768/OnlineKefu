@@ -6,10 +6,37 @@ var msg_input = $('#msg_input');
 var jihuorooms=$('#jihuorooms');
 var myName = myinfo.myname;
 var socket=null;
+
+//了天框当前操作对象
+
 window.setSocket=function(id,obj){
 $('#friendlist a').removeClass('hover');
-$(obj).addClass('hover');
-$('#khid').val(id);
+var _this=$(obj);
+_this.addClass('hover');
+var dataid=_this.attr('data');
+//查找是不是有聊天框
+var o=$('#admin_right .chat_message[data="'+dataid+'"]');
+if(o.length>0){
+	$('#admin_right .chat_message').hide();
+	o.show();
+}else{
+	$('#admin_right .chat_message').hide();
+	var str=''
+	+'<div class="chat_message" data="'+dataid+'">'
+	+'<div id="chat_content" class="chat_content g-bg msg-admin cl"></div>'
+	+'<a href="javascript:;" class="btn fr" onclick="$(this).prev().html(\'\');">清屏</a><br>'
+	+'<div class="sendmessage g-bg cl">'
+	+'<a href="javascript:;" onClick="chatconn();" class="btn hide">连接</a>'
+	+'<a href="javascript:;" onClick="disconn();" class="btn hide">断开连接</a>'
+	+'<div  id="status">未连接</div>'
+	+'<textarea type="text" class="form-control input-msg" id="msg_input"></textarea>'
+	+'<input type="hidden" class="kehuid" id="khid" value="'+dataid+'" />'
+	+'<a href="javascript:;" class="btn fr" onclick="sendmsg(this);">发送信息</a>'
+	+'</div>'
+	+'</div>';
+	$('#admin_right').append(str);
+}
+//$('#khid').val(id);
 };
 window.scrollbot=function(){
 	var sh=chat_content[0].scrollHeight;
@@ -27,13 +54,19 @@ window.disconn=function(){
 	socket=null;
 	status.text('未连接');
 	};
-window.sendmsg=function(){
-	var msg = msg_input.val();
-	var socketid=$('#khid').val();
+window.sendmsg=function(obj){
+	var _this=$(obj);
+	var msgobj=_this.parents('.chat_message')
+	var chat_contentobj=msgobj.find('.chat_content');
+	var chat_msgobj=msgobj.find('.input-msg');
+	var chat_kehuobj=msgobj.find('.kehuid');
+
+	var msg = chat_msgobj.val();
+	var socketid=chat_kehuobj.val();
 	if (!msg) return;
 	var data={'id':socketid,'msg':msg};
 	socket.emit('message',$.toJSON(data));
-	msg_input.val('');
+	chat_msgobj.val('');
 };
 window.chatconn=function(){
 		if(socket)return;
@@ -72,17 +105,19 @@ window.chatconn=function(){
 		});
 		//监听message事件，打印消息信息
 		socket.on('message',function(json){
+			var o=$('#admin_right .chat_message[data="'+json.khid+'"]');
+			var chat_contentobj=o.find('.chat_content');
 			var str='';
 			if(json.sid!=socket.id){
 			str = '<div class="chat-message message-l"><div class="nickname" style="color:[COLOR];">[USERNAME]:@ <span class="message-time">[TIME]</span></div><div class="message-text"> [MESSAGE]</div> </div>';
 			}else{
 			str = '<div class="chat-message message-r"><div class="nickname" style="color:[COLOR];"><span class="message-time">[TIME]</span>@: [USERNAME]</div><div class="message-text"> [MESSAGE]</div> </div>';
-					}
+			}
 			str=str.replace('[COLOR]',json.color);
 			str=str.replace('[TIME]',json.time);
 			str=str.replace('[MESSAGE]',json.text);
 			str=str.replace('[USERNAME]',json.username);
-			chat_content.append(str);
+			chat_contentobj.append(str);
 			scrollbot();
 		});
 
@@ -93,7 +128,7 @@ window.chatconn=function(){
 		socket.on('username lists',function(obj){
 			var str='';
 			for(var a in obj){
-				str+='<li><a onclick="setSocket(\''+obj[a]['id']+'\',this)" href="javascript:;">'+obj[a]['name']+'<span class="fr pdr10">在线</span></a></li>';
+				str+='<li><a data="'+obj[a]['id']+'" onclick="setSocket(\''+obj[a]['id']+'\',this)" href="javascript:;">'+obj[a]['name']+'<span class="fr pdr10">在线</span></a></li>';
 				}
 			$('#friendlist').html(str);
 		});

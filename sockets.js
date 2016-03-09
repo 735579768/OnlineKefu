@@ -176,12 +176,18 @@ var sockets={
 				//如果是管理员,对指定客户回复
 				if(client.isadmin==1){
 					sendmessage(io.sockets.connected[khid],'message',getMessage(client,msg));
+			  		//对自己进行回复
+			  		var mesg=getMessage(client,msg);
+			  		mesg['khid']=khid;//返回当前了天的客户socketid
+			  		sendmessage(io.sockets.connected[client.socketid],'message',mesg);
 				}else{
 					if(client.kefuid){
 						if(rooms.isonline(client.roomid,client.kefuid)){
 							//客服在线则转发给管理员
 							var socketid=rooms.getonlinekefubyid(client.roomid,client.kefuid).socketid;
-							sendmessage( io.sockets.connected[socketid],'message',getMessage(client,msg));
+							var mesg=getMessage(client,msg);
+					  		mesg['khid']=client.socketid;//返回当前了天的客户socketid
+							sendmessage( io.sockets.connected[socketid],'message',mesg);
 						}else{
 							//临时存到数据库
 						}
@@ -190,9 +196,10 @@ var sockets={
 						sendkefulist(io.sockets.connected[client.socketid],client);
 						//sendmessage(io.sockets.connected[client.socketid],'select kefu',getMessage(client,sendkefulist()));
 					}
-				}
 		  		//对自己进行回复
 		  		sendmessage(io.sockets.connected[client.socketid],'message',getMessage(client,msg));
+				}
+
 			});
 			//监听出退事件
 		  socket.on('disconnect', function () {
