@@ -178,9 +178,9 @@ var sockets={
 					sendmessage(io.sockets.connected[khid],'message',getMessage(client,msg));
 				}else{
 					if(client.kefuid){
-						if(rooms.isonline(client.kefuid)){
+						if(rooms.isonline(client.roomid,client.kefuid)){
 							//客服在线则转发给管理员
-							var socketid=rooms.getonlinekefubyid(roomid,client.kefuid).socketid;
+							var socketid=rooms.getonlinekefubyid(client.roomid,client.kefuid).socketid;
 							sendmessage( io.sockets.connected[socketid],'message',getMessage(client,msg));
 						}else{
 							//临时存到数据库
