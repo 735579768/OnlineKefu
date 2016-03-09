@@ -108,8 +108,8 @@ app.get('/logout.html', function(req, res, next) {
 });
 
 app.post('/login.html', function(req, res, next) {
-    var username = req.body.username;
-    var password = req.body.password;
+    var username = filtersql(req.body.username);
+    var password = filtersql(req.body.password);
     if (req.session['islogin']) {
         res.redirect('/admin.html')
     }
