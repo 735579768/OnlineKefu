@@ -26,7 +26,6 @@ var mysqlquery=function(sql,callback){
 rooms=new socketrooms();
 console.log(rooms);
 var sockets={
-	socketClients:{},
 	run:function(io){
 		var _this=this;
 		var numUsers = 0;
@@ -103,10 +102,10 @@ var sockets={
 			if(clientLists[myinfo.roomid]){
 				if(client.isadmin==1){
 					clientLists[myinfo.roomid]['admin']=client;
-					rooms.addkefu(myinfo.roomid,client);
+					rooms.addkefu(client);
 				}else{
 					clientLists[myinfo.roomid]['clients'][client.socketid]=client;
-					rooms.addclient(myinfo.roomid,client);
+					rooms.addclient(client);
 				}
 
 			}else{
@@ -114,7 +113,6 @@ var sockets={
 				rooms.deleteroom(myinfo.roomid);
 			}
 			console.log(rooms);
-			_this.socketClients=clientLists;
 			//console.log(clientLists);
 /*
 			//更新离开房间的人数
@@ -171,7 +169,8 @@ var sockets={
 			//socket.emit('set roomtitle',client);
 			//发送激活状态的聊天室
 			//io.sockets.emit('room number',io.sockets.adapter.rooms);
-			console.log('当前用户'+getusernums(client.roomid)+'个');
+			//console.log('当前用户'+getusernums(client.roomid)+'个');
+			console.log('当前用户'+rooms.getclientnums(client.roomid)+'个');
 		   });
 
 		  // 对message事件的监听
@@ -216,11 +215,14 @@ var sockets={
 
 				if(client.isadmin==0){
 					delete clientLists[client.roomid]['clients'][client.socketid];
+					rooms.deleteclient(client);
 				}else{
 					clientLists[client.roomid]['admin']=null;
+					rooms.deletekefu(client);
 				}
 				if(!clientLists[client.roomid]['clients'] &&!clientLists[client.roomid]['admin']){
 					delete clientLists[client.roomid];
+					rooms.deleteroom(client.roomid);
 				}
 			  	//发送给管理员
 			  	if(client.isadmin==0 && clientLists[client.roomid]['admin']!=null){

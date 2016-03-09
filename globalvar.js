@@ -49,29 +49,29 @@ socketrooms.prototype={
 		}
 	},
 	//向房间里添加在线客户
-	addclient:function(roomid,client){
-		this.addroom(roomid);
-		this.rooms[roomid]['clients'][client.socketid]=client;
+	addclient:function(client){
+		this.addroom(client.roomid);
+		this.rooms[client.roomid]['clients'][client.socketid]=client;
 
 	},
 	//从房间里删除在线客户
-	deleteclient:function(roomid,client){
+	deleteclient:function(client){
 		try{
-		delete this.rooms[roomid]['clients'][client.socketid];
+		delete this.rooms[client.roomid]['clients'][client.socketid];
 		}catch(e){
 			console.log(e);
 		}
 	},
 	//向房间里添加在线客服
-	addkefu:function(roomid,client){
-		this.addroom(roomid);
-		this.rooms[roomid]['kefu'][client.socketid]=client;
+	addkefu:function(client){
+		this.addroom(client.roomid);
+		this.rooms[client.roomid]['kefu'][client.socketid]=client;
 
 	},
 	//从房间里删除在线客服
-	deletekefu:function(roomid,client){
+	deletekefu:function(client){
 		try{
-		delete this.rooms[roomid]['kefu'][client.socketid];
+		delete this.rooms[client.roomid]['kefu'][client.socketid];
 		}catch(e){
 			console.log(e);
 		}
@@ -85,7 +85,7 @@ socketrooms.prototype={
 		return this.rooms[roomid]['kefu'];
 	},
 	//返回当前房间在线客户数量
-	getclientnum:function(){
+	getclientnums:function(roomid){
 		var num=0;
 		for(i in this.rooms[roomid]['clients']){
 			num++;
