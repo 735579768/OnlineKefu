@@ -4,7 +4,7 @@ var debug=function(obj){
 	 //io.sockets.emit('debug',obj);
 	};
 //数据库连接
- var db= require('mysql')
+ var db= require('mysql');
 var conn = db.createConnection({
  host     : 'localhost',
  user     : 'root',
@@ -12,17 +12,7 @@ var conn = db.createConnection({
  database : 'onlinekefu'
 });
 conn.connect();
-var mysqlquery=function(sql,callback){
-	conn.connect();
-	conn.query('SELECT * from kl_kefu limit 10', function(err, rows, fields) {
-	 if (err) throw err;
-	for(i in rows){
-	console.log(rows[i]['kefu_id']);
-	console.log(rows[i]['name']);
-	}
-	});
-	conn.end();
-};
+
 rooms=new socketrooms();
 console.log(rooms);
 var sockets={

@@ -13,11 +13,11 @@
 var serverip='<%=serverip%>';
 var myinfo={
 	 roomtitle:'问答聊天大厅',
-	 roomid:1,
+	 roomid:'<%=room_id%>',
 	 isadmin:1,
-	 myname:'客服丹丹',
+	 myname:'<%=nickname%>',
 	 uid:'',
-	 kefuobj:{id:1,name:'客服丹丹'}
+	 kefuobj:{id:'<%=kefu_id%>',name:'<%=nickname%>'}
 	};
 </script>
 </head>
@@ -27,7 +27,7 @@ var myinfo={
 <ul id="jihuorooms" class="cl">
 </ul>
 
-<div class='chat_content_title mgt10 g-bg'><span id="roomtitle">客服系统</span>
+<div class='chat_content_title mgt10 g-bg'><span id="roomtitle"><%=nickname%>你好，<a href="logout.html">退出系统</a></span>
 <div class="fr">
 <span id="numusers" >当前房间0个</span>
 </div>
