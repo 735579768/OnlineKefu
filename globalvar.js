@@ -31,7 +31,7 @@ global.getColor = function() {
     return '#666;';
 };
 global.filtersql=function(str){
-    var re=/and|delete|or|exec|insert|select|union|update|count|*|'|join|>|</;
+    var re=/and|delete|or|exec|insert|select|union|update|count|\*|\'|join|>|</ig;
     str=str.replace(re,'');
     return str;
 };
