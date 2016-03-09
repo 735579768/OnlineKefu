@@ -124,7 +124,7 @@ var sockets={
 				sendmessage(soc,'system',getMessage(client,'成功登陆客服系统!'));
 				sendmessage(soc,'system',getMessage(client,'欢迎\'  '+client.name+'  \'使用客服系统!'));
 				sendmessage(soc,'username lists',getkefuuserlist(client.roomid,client.kefuobj.id));
-				sendmessage(soc,'usernums','当前'+getusernums(roomid)+'个客户');
+				//sendmessage(soc,'usernums','当前'+getusernums(roomid)+'个客户');
 			}else{
 				rooms.addclient(client);
 				sendmessage(soc,'system',getMessage(client,'请问您有什么问题吗?'));
@@ -148,16 +148,19 @@ var sockets={
 			var kefu=rooms.getkefubyid(client.roomid,id)
 			sendmessage(io.sockets.connected[client.socketid],'system',getMessage(client,'您已选择客服 \'  '+kefu.name+'  \' !'));
 			if(!rooms.isonline(client.roomid,id)){
-			sendmessage(io.sockets.connected[client.socketid],'system',getMessage(client,'当前客服 \'  '+kefu.name+'  \' 离线 ! 请留言或请选择其它客服！'));
+				sendmessage(io.sockets.connected[client.socketid],'system',getMessage(client,'当前客服 \'  '+kefu.name+'  \' 离线 ! 请留言或请选择其它客服！'));
 			}else{
 				var socketid=rooms.getonlinekefubyid(client.roomid,id).socketid;
 				var soc=io.sockets.connected[socketid];
+				sendmessage(soc,'system',getMessage(client,'客户'+client.name+'已经连接此客服!'));
 				sendmessage(soc,'username lists',getkefuuserlist(client.roomid,client.kefuid));
 			}
+
 			//更新原来的客服id
 			if(srckefuid){
 				var socketid=rooms.getonlinekefubyid(client.roomid,srckefuid).socketid;
 				var soc=io.sockets.connected[socketid];
+				sendmessage(soc,'system',getMessage(client,'客户'+client.name+'已经离开!'));
 				sendmessage(soc,'username lists',getkefuuserlist(client.roomid,srckefuid));
 			}
 		});
@@ -218,16 +221,17 @@ var sockets={
 					rooms.deleteclient(client);
 				}
 			  	//发送给管理员
-			  	if(client.isadmin==0 && rooms.getonlinekefubyid(client.kefuid)){
-				  	var socketid=rooms.getonlinekefubyid(client.kefuid).socketid;
+			  	if(client.isadmin!=1 && rooms.getonlinekefubyid(client.roomid,client.kefuid)){
+				  	var socketid=rooms.getonlinekefubyid(client.roomid,client.kefuid).socketid;
 				  	var soc=io.sockets.connected[socketid];
 				  	sendmessage(soc,'userleft',obj);
 					sendmessage(soc,'username lists',getkefuuserlist(client.roomid,client.kefuid));
-					sendmessage(soc,'usernums','当前'+getusernums(client.roomid)+'个用户');
+					//sendmessage(soc,'usernums','当前'+getusernums(client.roomid)+'个用户');
 				}else{
 				//如果客服离线就通知当前客服下面的客户
 				}
-			  console.log('当前用户'+rooms.getclientnums()+'个');
+			 console.log(client.name+'离开');
+			  console.log('当前网站在线客户'+rooms.getclientnums(client.roomid)+'个');
 			  }catch(e){
 			  	console.log(e);
 			  }
