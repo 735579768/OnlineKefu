@@ -1,4 +1,5 @@
 global.sessionid = null;
+global.uinfo=null;
 global.debug = function(obj) {
     console.log("--------------------------------------------------------------")
     console.log(obj);

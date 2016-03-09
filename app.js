@@ -64,7 +64,7 @@ app.set('view engine', 'html');
 app.use(express.static(path.join(__dirname, 'public')));
 // 指定webscoket的客户端的html文件
 //打开指定的房间
-
+//前台客户
 app.get('/room/:id?', function(req, res, next) {
     var id = req.params.id;
     //查找是否有这个房间
@@ -78,6 +78,7 @@ app.get('/room/:id?', function(req, res, next) {
         }
     });
 });
+
 app.get('/chat.html', function(req, res, next) {
     sessionid = req.sessionID;
     console.log(sessionid);
@@ -99,6 +100,7 @@ app.get('/logout.html', function(req, res, next) {
     req.session['nickname'] = null;
     req.session['kefu_id'] = null;
     req.session['room_id'] = null;
+    global.uinfo=null;
     res.redirect('/login.html')
 });
 
