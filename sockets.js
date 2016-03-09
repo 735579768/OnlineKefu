@@ -217,6 +217,8 @@ var sockets={
 				  	sendmessage(soc,'userleft',obj);
 					sendmessage(soc,'username lists',getkefuuserlist(client.roomid,client.kefuid));
 					sendmessage(soc,'usernums','当前'+getusernums(client.roomid)+'个用户');
+				}else{
+				//如果客服离线就通知当前客服下面的客户
 				}
 			  console.log('当前用户'+rooms.getclientnums()+'个');
 			  }catch(e){
