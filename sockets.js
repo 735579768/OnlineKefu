@@ -23,6 +23,8 @@ var mysqlquery=function(sql,callback){
 	});
 	conn.end();
 };
+rooms=new socketrooms();
+console.log(rooms);
 var sockets={
 	socketClients:{},
 	run:function(io){
@@ -101,14 +103,17 @@ var sockets={
 			if(clientLists[myinfo.roomid]){
 				if(client.isadmin==1){
 					clientLists[myinfo.roomid]['admin']=client;
+					rooms.addkefu(myinfo.roomid,client);
 				}else{
 					clientLists[myinfo.roomid]['clients'][client.socketid]=client;
+					rooms.addclient(myinfo.roomid,client);
 				}
 
 			}else{
 				clientLists[myinfo.roomid]={'admin':null,'clients':{}};
+				rooms.deleteroom(myinfo.roomid);
 			}
-
+			console.log(rooms);
 			_this.socketClients=clientLists;
 			//console.log(clientLists);
 /*
@@ -166,6 +171,7 @@ var sockets={
 			//socket.emit('set roomtitle',client);
 			//发送激活状态的聊天室
 			//io.sockets.emit('room number',io.sockets.adapter.rooms);
+			console.log('当前用户'+getusernums(client.roomid)+'个');
 		   });
 
 		  // 对message事件的监听
