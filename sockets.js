@@ -33,32 +33,26 @@ var sockets={
 		//返回当前房间用户
 		var getuserlist=function(roomid){
 		  	//查询用户名列表
-/*			var userlist=[];
-			for(var a in io.sockets.adapter.rooms[roomid]){
-				//console.log(a);
-				var o=io.sockets.connected[a];
-				userlist.push({'id':o.id,'name':o.username});
-			}
-			return userlist;*/
 			var userlist=[];
-			for(var a in clientLists[roomid]['clients']){
+			var clients=rooms.getallclient(roomid);
+			for(var a in clients){
 				//console.log(a);
-				var o=clientLists[roomid]['clients'][a];
+				var o=clients[a];
 				userlist.push({'id':o.id,'name':o.name});
 			}
 			return userlist;
 		};
-		var getusernums=function(roomid){
+/*		var getusernums=function(roomid){
 			//更新加入房间的人数
 			var romnum=0;
-/*			for(var a in io.sockets.adapter.rooms[roomid]){
+			for(var a in io.sockets.adapter.rooms[roomid]){
 					romnum++;
-				}*/
+				}
 			for(var a in clientLists[roomid]['clients']){
 				romnum++;
 			}
 			return romnum;
-		};
+		};*/
 		//发送消息
 		var sendmessage=function(socket,msgtype,msg){
 			if(socket){
@@ -66,6 +60,20 @@ var sockets={
 			}else{
 				return false;
 			}
+		};
+		//从数据库取客服列表
+		var sendkefulist=function(soc,client){
+			conn.query('SELECT * from kl_kefu limit 10', function(err, rows, fields) {
+			if (err) throw err;
+			var kefulist=[];
+			var kefu2={};
+			for(i in rows){
+				kefulist.push({'id':rows[i]['kefu_id'],'name':rows[i]['name']})
+				kefu2[rows[i]['kefu_id']]={'id':rows[i]['kefu_id'],'name':rows[i]['name']};
+			}
+			rooms.setkefulist(client.roomid,kefu2);
+			sendmessage(soc,'select kefu',getMessage(client,kefulist));
+			});
 		};
 		//WebSocket连接监听
 		io.on('connection', function (socket) {
@@ -114,17 +122,6 @@ var sockets={
 				rooms.deleteroom(myinfo.roomid);
 			}
 			console.log(rooms);
-			//console.log(clientLists);
-/*
-			//更新离开房间的人数
-			var romnum=0;
-			for(var a in io.sockets.adapter.rooms[roomid]){
-				romnum++;
-				}*/
-			//io.sockets.to(roomid).emit('usernums','当前房间'+romnum+'个用户');
-
-
-
 			socket.join(roomid);
 			//对自己进行回复
 			var soc=io.sockets.connected[client.socketid];
@@ -134,30 +131,12 @@ var sockets={
 				sendmessage(soc,'system',getMessage(client,'请问您有什么问题吗?'));
 				//sendmessage(soc,'select kefu',getMessage(client,[{'id':1,'name':'客服1'},{'id':2,'name':'客服2'},{'id':3,'name':'客服3'}]));
 			try{
-				conn.query('SELECT * from kl_kefu limit 10', function(err, rows, fields) {
-				if (err) throw err;
-				var kefulist=[];
-				for(i in rows){
-					kefulist.push({'id':rows[i]['kefu_id'],'name':rows[i]['name']})
-				}
-				sendmessage(soc,'select kefu',getMessage(client,kefulist));
-				});
+				sendkefulist(soc,client);
 				//conn.end();
 			}catch(e){
 				console.log(e);
 			}
 			}
-			//对自己进入的房间给别人回复
-
-
-/*			//查询用户名列表
-			var userlist=[];
-			for(var a in io.sockets.adapter.rooms[roomid]){
-				console.log(a);
-				var o=io.sockets.connected[a];
-				userlist.push(o.username);
-				}*/
-
 			if(clientLists[client.roomid]['admin']!=null){
 				//发送给管理员
 				socketid=clientLists[client.roomid]['admin'].socketid;
@@ -166,20 +145,25 @@ var sockets={
 				sendmessage(soc,'username lists',getuserlist(roomid));
 				sendmessage(soc,'usernums','当前'+getusernums(roomid)+'个客户');
 			}
-
-			//socket.emit('set roomtitle',client);
-			//发送激活状态的聊天室
-			//io.sockets.emit('room number',io.sockets.adapter.rooms);
-			//console.log('当前用户'+getusernums(client.roomid)+'个');
 			console.log('当前用户'+rooms.getclientnums(client.roomid)+'个');
 		   });
+		socket.on('set kefu',function(id){
+			//为客户设置客服
+			client.kefuid=id;
+			rooms.updateclient(client);
 
+			//取客服名字
+			var kefu=rooms.getkefubyid(client.roomid,id)
+			sendmessage(io.sockets.connected[client.socketid],'system',getMessage(client,'您已选择客服 \'  '+kefu.name+'  \' !'));
+		});
 		  // 对message事件的监听
 		  socket.on('message', function(msg){
 		  		msg=eval('(' + msg + ')');
 		  		//msg=eval(msg);
 				var khid=msg.id;
 		  		msg=msg.msg;
+
+		  		//提醒管理员选择一个客户进行回复
 		  		if(client.isadmin==1 && !khid){
 		  			sendmessage( io.sockets.connected[client.socketid],'system',getMessage(client,'请选择一个客户!'));
 		  			return false;
@@ -188,12 +172,18 @@ var sockets={
 				if(client.isadmin==1){
 					sendmessage(io.sockets.connected[khid],'message',getMessage(client,msg));
 				}else{
-					if(clientLists[client.roomid]['admin']){
-					//否则转发给管理员
-					socketid=clientLists[client.roomid]['admin'].socketid;
-					sendmessage( io.sockets.connected[socketid],'message',getMessage(client,msg));
+					if(client.kefuid){
+						if(clientLists[client.roomid]['admin']){
+						//否则转发给管理员
+						socketid=clientLists[client.roomid]['admin'].socketid;
+						sendmessage( io.sockets.connected[socketid],'message',getMessage(client,msg));
+						}else{
+							//临时存到数据库
+						}
 					}else{
-						//临时存到数据库
+						//提醒客户选择一个客服
+						sendkefulist(io.sockets.connected[client.socketid],client);
+						//sendmessage(io.sockets.connected[client.socketid],'select kefu',getMessage(client,sendkefulist()));
 					}
 				}
 		  		//对自己进行回复
@@ -215,16 +205,16 @@ var sockets={
 			  //io.sockets.emit('totalusernums','总共'+numUsers+'个用户');
 
 				if(client.isadmin==0){
-					delete clientLists[client.roomid]['clients'][client.socketid];
+					//delete clientLists[client.roomid]['clients'][client.socketid];
 					rooms.deleteclient(client);
 				}else{
-					clientLists[client.roomid]['admin']=null;
+					//clientLists[client.roomid]['admin']=null;
 					rooms.deletekefu(client);
 				}
-				if(!clientLists[client.roomid]['clients'] &&!clientLists[client.roomid]['admin']){
+/*				if(!clientLists[client.roomid]['clients'] &&!clientLists[client.roomid]['admin']){
 					delete clientLists[client.roomid];
 					rooms.deleteroom(client.roomid);
-				}
+				}*/
 			  	//发送给管理员
 			  	if(client.isadmin==0 && clientLists[client.roomid]['admin']!=null){
 				  	socketid=clientLists[client.roomid]['admin'].socketid;
@@ -233,7 +223,7 @@ var sockets={
 					sendmessage(soc,'username lists',getuserlist(client.roomid));
 					sendmessage(soc,'usernums','当前'+getusernums(client.roomid)+'个用户');
 				}
-			  console.log('当前用户'+getusernums(client.roomid)+'个');
+			  console.log('当前用户'+rooms.getclientnums()+'个');
 			  }catch(e){
 			  	console.log(e);
 			  }

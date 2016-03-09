@@ -8,8 +8,8 @@ var msg_input = $('#msg_input');
 var jihuorooms=$('#jihuorooms');
 var myName = myinfo.myname;
 var socket=null;
-window.selectkefu=function(id){
-
+window.setkefu=function(id){
+	socket.emit('set kefu',id);
 };
 window.scrollbot=function(){
 	var sh=chat_content[0].scrollHeight;
@@ -77,12 +77,15 @@ window.chatconn=function(){
 		socket.on('debug',function(obj){
 			console.log(obj);
 		});
+		socket.on('set kefu',function(){
+			myinfo['kefuid']=id;
+		});
 		socket.on('select kefu',function(obj){
 			console.log(obj);
 			var str = '';
 			var kf='<span class="selectkefu"><span>请选择客服：</span>';
 			for(i in obj.text){
-				kf+='<a href="javascript:;" onclick="selectkefu(\''+obj.text[i]['id']+'\')">'+obj.text[i]['name']+'</a>';
+				kf+='<a href="javascript:;" onclick="setkefu(\''+obj.text[i]['id']+'\')">'+obj.text[i]['name']+'</a>';
 			}
 			kf+='</span>';
 			//if(myName==json.text) status.text(myName + ': ').css('color', json.color);
