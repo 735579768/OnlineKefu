@@ -73,6 +73,7 @@ var sockets={
 		  var client = {
 			sessionid:sessionid,
 			socketid:socket.id,
+			kefuid:'',
 			name:'',
 			isadmin:0,
 			roomtitle:'公共聊天大厅',
