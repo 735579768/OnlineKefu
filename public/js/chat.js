@@ -81,7 +81,6 @@ window.chatconn=function(){
 			myinfo['kefuid']=id;
 		});
 		socket.on('select kefu',function(obj){
-			console.log(obj);
 			var str = '';
 			var kf='<span class="selectkefu"><span>请选择客服：</span>';
 			for(i in obj.text){

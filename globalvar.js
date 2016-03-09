@@ -54,6 +54,7 @@ socketrooms.prototype={
 	//向房间里添加在线客户
 	addclient:function(client){
 		this.addroom(client.roomid);
+		this.addroom(client.roomid);
 		this.rooms[client.roomid]['clients'][client.socketid]=client;
 	},
 	//更新客户信息
@@ -66,14 +67,17 @@ socketrooms.prototype={
 		delete this.rooms[client.roomid]['clients'][client.socketid];
 		this.deleteroom(client.roomid);
 		}catch(e){
-			console.log(e);
+			//console.log(e);
 		}
 	},
 	//向房间里添加在线客服
 	addkefu:function(client){
+		try{
 		this.addroom(client.roomid);
-		this.rooms[client.roomid]['onlinekefu'][client.socketid]=client;
-
+		this.rooms[client.roomid]['onlinekefu'][client.kefuobj.id]=client;
+	}catch(e){
+		//console.log(e);
+	}
 	},
 	//更新客服信息
 	updatekefu:function(client){
@@ -85,28 +89,48 @@ socketrooms.prototype={
 		delete this.rooms[client.roomid]['onlinekefu'][client.socketid];
 		this.deleteroom(client.roomid);
 		}catch(e){
-			console.log(e);
+			//console.log(e);
 		}
 	},
 	//返回当前房间的在线客户列表
 	getallclient:function(roomid){
+	try{
 		return this.rooms[roomid]['clients'];
+	}catch(e){
+		//console.log(e);
+	}
 	},
 	//返回当前房间的所有客服列表(包含不在线的)
 	getallkefu:function(roomid){
+	try{
 		return this.rooms[roomid]['kefu'];
+	}catch(e){
+		//console.log(e);
+	}
 	},
 	//通过id返回当前房间客服
 	getkefubyid:function(roomid,id){
+	try{
 		return this.rooms[roomid]['kefu'][id];
+	}catch(e){
+		//console.log(e);
+	}
 	},
 	//返回当前房间的在线客服列表
 	getallonlinekefu:function(roomid){
+	try{
 		return this.rooms[roomid]['onlinekefu'];
+	}catch(e){
+		//console.log(e);
+	}
 	},
 	//通过id返回当前房间在线客服
 	getonlinekefubyid:function(roomid,id){
+	try{
 		return this.rooms[roomid]['onlinekefu'][id];
+	}catch(e){
+		//console.log(e);
+	}
 	},
 	//返回当前房间在线客户数量
 	getclientnums:function(roomid){
@@ -124,6 +148,18 @@ socketrooms.prototype={
 	setkefulist:function(roomid,kefulist){
 		this.addroom(roomid);
 		this.rooms[roomid]['kefu']=kefulist;
+	},
+	//判断客服是否在线
+	isonline:function(roomid,kefuid){
+		try{
+		if(this.rooms[roomid]['onlinekefu'][kefuid]){
+			return true;
+		}else{
+			return false;
+		}
+	}catch(e){
+		return false;
+	}
 	}
 
 };
