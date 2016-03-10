@@ -56,6 +56,18 @@ global.html_encode=function(str)
   s = s.replace(/\n/g, "<br>");
   return s;
 }
+//设置cookies
+global.serialize = function(name,val,opt){
+　var pairs = [name + '=' +encodeURIComponent(val)];
+　opt = opt || {};
+　if(opt.maxAge) 　pairs.push('Max-Age=' + opt.maxAge);
+　if(opt.domin) 　pairs.push('Domin=' + opt.domin);
+　if(opt.path) 　pairs.push('Path=' + opt.path);
+　if(opt.expires) 　pairs.push('Expires=' + opt.expires);
+　if(opt.httpOnly) 　pairs.push('HttpOnly');
+　if(opt.secure) 　pairs.push('Secure');
+　return pairs.join(';');
+};
 global.socketrooms = function() {
     this.rooms = {};
 };
