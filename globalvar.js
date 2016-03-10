@@ -63,7 +63,7 @@ global.serialize = function(name,val,opt){
 　if(opt.maxAge) 　pairs.push('Max-Age=' + opt.maxAge);
 　if(opt.domin) 　pairs.push('Domin=' + opt.domin);
 　if(opt.path) 　pairs.push('Path=' + opt.path);
-　if(opt.expires) 　pairs.push('Expires=' + opt.expires);
+　if(opt.expires) 　pairs.push('Expires=' + new Date(new Date().getTime()+opt.expires).toUTCString());
 　if(opt.httpOnly) 　pairs.push('HttpOnly');
 　if(opt.secure) 　pairs.push('Secure');
 　return pairs.join(';');

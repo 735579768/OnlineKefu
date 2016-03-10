@@ -1,16 +1,20 @@
 //引入程序包
 var express = require('express'),
-    path = require('path')
+
+    path = require('path'),
     // , rooms= require('./rooms.js')
-    ,
     parseurl = require('parseurl'),
     session = require('express-session'),
+   // sessionStore = new session.MemoryStore({reapInterval: 60000 * 10}),
     cookieParser = require('cookie-parser'), //如果要使用cookie，需要显式包含这个模块
     bodyParser = require('body-parser'),
     app = express(),
     server = require('http').createServer(app),
     io = require('socket.io').listen(server);
 
+/*io.set('authorization', function (handshakeData, callback) {
+
+});*/
 //数据库连接
 var db = require('mysql');
 var conn = db.createConnection({
