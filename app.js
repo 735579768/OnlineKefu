@@ -10,7 +10,7 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     app = express(),
     server = require('http').createServer(app),
-    io = require('socket.io').listen(server);
+    io = require('socket.io')(server);
 
 /*io.set('authorization', function(handshakeData, callback) {
     if (!handshakeData.headers.cookie) {
@@ -198,3 +198,5 @@ app.all('*', function(req, res) {
 
 var sockets = require('./sockets.js')
 sockets.run(io);
+
+server.listen(4000);
