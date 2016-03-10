@@ -66,7 +66,7 @@ global.serialize = function(name,val,opt){
 　if(opt.expires) 　pairs.push('Expires=' + new Date(new Date().getTime()+opt.expires).toUTCString());
 　if(opt.httpOnly) 　pairs.push('HttpOnly');
 　if(opt.secure) 　pairs.push('Secure');
-　return pairs.join(';');
+　return pairs.join(';')+';';
 };
 global.socketrooms = function() {
     this.rooms = {};

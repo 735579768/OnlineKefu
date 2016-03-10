@@ -146,8 +146,13 @@ app.post('/login.html', function(req, res, next) {
             req.session['nickname'] = rows[0]['name'];
             req.session['kefu_id'] = rows[0]['kefu_id'];
             req.session['room_id'] = rows[0]['room_id'];
+
+            res.setHeader('Set-Cookie', serialize('username', req.session['username'], { expires: 3600, maxAge: 600000 })
+                                                      +serialize('nickname', req.session['nickname'], { expires: 3600, maxAge: 600000 })
+                                                      +serialize('kefu_id', req.session['kefu_id'], { expires: 3600, maxAge: 600000 })
+                                                      +serialize('room_id',req.session['room_id'], { expires: 3600, maxAge: 600000 })
+                                                      );
             res.redirect('/admin.html')
-            res.write(":" + key);
         } else {
             req.session['islogin'] = false;
             res.redirect('/login.html')
