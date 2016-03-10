@@ -146,17 +146,17 @@ app.post('/login.html', function(req, res, next) {
             req.session['nickname'] = rows[0]['name'];
             req.session['kefu_id'] = rows[0]['kefu_id'];
             req.session['room_id'] = rows[0]['room_id'];
-            var mycookes=[
-            'username='+ req.session['username'],
-            'kefu_id='+ req.session['kefu_id'],
-            'nickname='+ req.session['nickname'],
-            'room_id='+ req.session['room_id']
+            var mycookes = [
+                'username=' + req.session['username'],
+                'kefu_id=' + req.session['kefu_id'],
+                'nickname=' + req.session['nickname'],
+                'room_id=' + req.session['room_id']
             ];
-            res.setHeader('Set-Cookie',serialize('username',req.session['username']));
-/*            res.setHeader('Set-Cookie',serialize('nickname',req.session['nickname']));
-            res.setHeader('Set-Cookie',serialize('kefu_id',req.session['kefu_id']));
-            res.setHeader('Set-Cookie',serialize('room_id',req.session['room_id']));*/
-          　//res.writeHead(200);
+            res.setHeader('Set-Cookie', serialize('username', req.session['username']));
+            /*            res.setHeader('Set-Cookie',serialize('nickname',req.session['nickname']));
+                        res.setHeader('Set-Cookie',serialize('kefu_id',req.session['kefu_id']));
+                        res.setHeader('Set-Cookie',serialize('room_id',req.session['room_id']));*/
+            　 //res.writeHead(200);
             res.redirect('/admin.html');
         } else {
             req.session['islogin'] = false;
