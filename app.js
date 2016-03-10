@@ -5,15 +5,35 @@ var express = require('express'),
     // , rooms= require('./rooms.js')
     parseurl = require('parseurl'),
     session = require('express-session'),
-   // sessionStore = new session.MemoryStore({reapInterval: 60000 * 10}),
+    // sessionStore = new session.MemoryStore({reapInterval: 60000 * 10}),
     cookieParser = require('cookie-parser'), //如果要使用cookie，需要显式包含这个模块
     bodyParser = require('body-parser'),
     app = express(),
     server = require('http').createServer(app),
     io = require('socket.io').listen(server);
 
-/*io.set('authorization', function (handshakeData, callback) {
-
+/*io.set('authorization', function(handshakeData, callback) {
+    if (!handshakeData.headers.cookie) {
+        return callback('no found cookie', false);
+    }
+    handshakeData.cookie = cookieParser(handshakeData.headers.cookie);
+    console.log("handshakeData:" + handshakeData.headers.cookie + "&&&&&&&" + handshakeData.cookie);
+    var connect_sid = handshakeData.cookie['connect.sid'];
+    console.log("connect_sid:" + connect_sid);
+    if (connect_sid) {
+        storeMemory.get(connect_sid, function(error, session) {
+            if (error) {
+                callback(error.message, false);
+                console.log("session:" + session);
+            } else {
+                handshakeData.session = session;
+                console.log("handshakeData.session:" + handshakeData.session);
+                callback(null, true);
+            }
+        });
+    } else {
+        callback('nosession');
+    }
 });*/
 //数据库连接
 var db = require('mysql');
@@ -74,7 +94,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //前台客户
 app.get('/room/:id?', function(req, res, next) {
     //设置cookies
-    res.setHeader('Set-Cookie',serialize('isVisit','1',{expires:3600,maxAge:600000, httpOnly:true, path:'/', secure:true}));
+    res.setHeader('Set-Cookie', serialize('isVisit', '1', { expires: 3600, maxAge: 600000, httpOnly: true, path: '/', secure: true }));
     var id = req.params.id;
     //查找是否有这个房间
     var sql = "SELECT * from kl_kefu where room_id='" + id + "'";
@@ -89,7 +109,7 @@ app.get('/room/:id?', function(req, res, next) {
 });
 
 app.get('/chat.html', function(req, res, next) {
-   res.send('error');
+    res.send('error');
 });
 
 
@@ -127,7 +147,7 @@ app.post('/login.html', function(req, res, next) {
             req.session['kefu_id'] = rows[0]['kefu_id'];
             req.session['room_id'] = rows[0]['room_id'];
             res.redirect('/admin.html')
-            res.write(":"+key);
+            res.write(":" + key);
         } else {
             req.session['islogin'] = false;
             res.redirect('/login.html')
@@ -159,11 +179,11 @@ app.get('/', function(req, res, next) {
     //req.session.regenerate(function(err) {
     //
     //});
- res.send('error');
+    res.send('error');
 });
 
 app.all('*', function(req, res) {
-   res.send('error');
+    res.send('error');
 });
 
 var sockets = require('./sockets.js')
