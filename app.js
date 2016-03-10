@@ -94,7 +94,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //前台客户
 app.get('/room/:id?', function(req, res, next) {
     //设置cookies
-    res.setHeader('Set-Cookie', serialize('isVisit', '1', { expires: 3600, maxAge: 600000, httpOnly: true, path: '/', secure: true }));
+    res.setHeader('Set-Cookie', serialize('isVisit', '1', { expires: 3600, maxAge: 600000 }));
     var id = req.params.id;
     //查找是否有这个房间
     var sql = "SELECT * from kl_kefu where room_id='" + id + "'";
