@@ -5,6 +5,7 @@ var express = require('express'),
     ,
     parseurl = require('parseurl'),
     session = require('express-session'),
+    cookieParser = require('cookie-parser'), //如果要使用cookie，需要显式包含这个模块
     bodyParser = require('body-parser'),
     app = express(),
     server = require('http').createServer(app),
@@ -30,7 +31,9 @@ require('./globalvar.js')
 server.listen(port, function() {
     console.log('Server listening at port %d', port);
 });
-
+// 设置 Cookie
+app.use(cookieParser('ankcc_'));
+//app.use(cookieParser())
 /************添加session支持**************************/
 app.use(session({
     secret: 'keyboard cat',
@@ -66,6 +69,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //打开指定的房间
 //前台客户
 app.get('/room/:id?', function(req, res, next) {
+    //res.cookie('name',' loginname', {maxAge:600000, httpOnly:true, path:'/', secure:true});
     var id = req.params.id;
     //查找是否有这个房间
     var sql = "SELECT * from kl_kefu where room_id='" + id + "'";
@@ -118,6 +122,7 @@ app.post('/login.html', function(req, res, next) {
             req.session['kefu_id'] = rows[0]['kefu_id'];
             req.session['room_id'] = rows[0]['room_id'];
             res.redirect('/admin.html')
+            res.write(":"+key);
         } else {
             req.session['islogin'] = false;
             res.redirect('/login.html')
