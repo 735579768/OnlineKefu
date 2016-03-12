@@ -17,6 +17,10 @@ window.scrollbot=function(){
 	chat_content.scrollTop(sh-h);
 	};
 window.joinroom=function(){
+	if(!socket.connected){
+		alert('连接已经断开,请刷新!');
+		return;
+	}
 	var args=arguments;
 	myinfo.roomid=args[0]?args[0]:1;
 	myinfo.roomtitle=args[1]?args[1]:('聊天室ID:'+args[0]);
