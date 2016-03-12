@@ -5,34 +5,33 @@ var express = require('express'),
     // , rooms= require('./rooms.js')
     parseurl = require('parseurl'),
     session = require('express-session'),
-    // sessionStore = new session.MemoryStore({reapInterval: 60000 * 10}),
+    sessionStore = new session.MemoryStore({ reapInterval: 60000 * 10 }),
     cookieParser = require('cookie-parser'), //如果要使用cookie，需要显式包含这个模块
     bodyParser = require('body-parser'),
     app = express(),
-    server = require('http').createServer(app),
-    io = require('socket.io')(server);
+    cookie = require('cookie'),
+    http = require('http').Server(app),
+    io = require('socket.io')(http);
 
-/*io.set('authorization', function(handshakeData, callback) {
-    if (!handshakeData.headers.cookie) {
-        return callback('no found cookie', false);
-    }
-    handshakeData.cookie = cookieParser(handshakeData.headers.cookie);
-    console.log("handshakeData:" + handshakeData.headers.cookie + "&&&&&&&" + handshakeData.cookie);
-    var connect_sid = handshakeData.cookie['connect.sid'];
-    console.log("connect_sid:" + connect_sid);
-    if (connect_sid) {
-        storeMemory.get(connect_sid, function(error, session) {
-            if (error) {
-                callback(error.message, false);
-                console.log("session:" + session);
+const COOKIE_SECRET = 'secret',
+    COOKIE_KEY = 'express.sid';
+/*io.use(function(socket, next) {
+    var data = socket.handshake || socket.request;
+    if (data.headers.cookie) {
+        data.cookie = cookie.parse(data.headers.cookie);
+        data.sessionID = cookieParser.signedCookie(data.cookie[COOKIE_KEY], COOKIE_SECRET);
+        data.sessionStore = sessionStore;
+        sessionStore.get(data.sessionID, function (err, session) {
+            if (err || !session) {
+                return next(new Error('session not found'))
             } else {
-                handshakeData.session = session;
-                console.log("handshakeData.session:" + handshakeData.session);
-                callback(null, true);
+                data.session = session;
+                data.session.id = data.sessionID;
+                next();
             }
         });
     } else {
-        callback('nosession');
+        return next(new Error('Missing cookie headers'));
     }
 });*/
 //数据库连接
@@ -45,16 +44,12 @@ var conn = db.createConnection({
 });
 conn.connect();
 
-var port = process.env.PORT || 4000;
-
 //客户端服务器IP/端口
 var clientip = 'http://127.0.0.1:4000';
 //引入全局变量
 require('./globalvar.js')
 
-server.listen(port, function() {
-    console.log('Server listening at port %d', port);
-});
+
 // 设置 Cookie
 app.use(cookieParser('ankcc_'));
 //app.use(cookieParser())
@@ -62,6 +57,7 @@ app.use(cookieParser('ankcc_'));
 app.use(session({
     secret: 'keyboard cat',
     resave: false,
+    key: 'express.sid',
     saveUninitialized: true,
     cookie: { maxAge: 1000 * 3600 }
 }));
@@ -199,4 +195,6 @@ app.all('*', function(req, res) {
 var sockets = require('./sockets.js')
 sockets.run(io);
 
-server.listen(4000);
+http.listen(4000, function() {
+    console.log('Server is started: http://127.0.0.1: 4000');
+});
