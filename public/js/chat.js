@@ -9,6 +9,10 @@ var jihuorooms=$('#jihuorooms');
 var myName = myinfo.nickname;
 var socket=null;
 window.setkefu=function(id){
+	if(!socket.connected){
+		alert('连接已经断开,请刷新!');
+		return;
+	}
 	socket.emit('set kefu',id);
 };
 window.scrollbot=function(){
