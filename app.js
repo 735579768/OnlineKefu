@@ -1,19 +1,17 @@
-var connect = require('connect'),
-	express = require('express'),
-	app = express(),
-	http = require('http').Server(app),
-	io = require('socket.io')(http),
-	bodyParser = require('body-parser'),
-	cookie = require('cookie'),
-	cookieParser = require('cookie-parser'),
-	session = require('express-session'),
-	MemoryStore = session.MemoryStore,
-	sessionStore = new MemoryStore();
+var //connect = require('connect'),
+    express = require('express'),
+    app = express(),
+    http = require('http').Server(app),
+    io = require('socket.io')(http),
+    bodyParser = require('body-parser'),
+    cookie = require('cookie'),
+    cookieParser = require('cookie-parser'),
+    session = require('express-session'),
+    MemoryStore = session.MemoryStore,
+    sessionStore = new MemoryStore();
 
 const COOKIE_SECRET = 'secret',
-		COOKIE_KEY = 'express.sid';
-//客户端服务器IP/端口
-var clientip = 'http://127.0.0.1:4000';
+    COOKIE_KEY = 'express.sid';
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
@@ -48,28 +46,28 @@ require('./globalvar.js')
 
 
 io.use(function(socket, next) {
-	var data = socket.handshake || socket.request;
-	if (data.headers.cookie) {
-		data.cookie = cookie.parse(data.headers.cookie);
-		data.sessionID = cookieParser.signedCookie(data.cookie[COOKIE_KEY], COOKIE_SECRET);
-		data.sessionStore = sessionStore;
-		sessionStore.get(data.sessionID, function (err, session) {
-			if (err || !session) {
-				return next(new Error('session not found'))
-			} else {
-				data.session = session;
-				data.session.id = data.sessionID;
-				next();
-			}
-		});
-	} else {
-		return next(new Error('Missing cookie headers'));
-	}
+    var data = socket.handshake || socket.request;
+    if (data.headers.cookie) {
+        data.cookie = cookie.parse(data.headers.cookie);
+        data.sessionID = cookieParser.signedCookie(data.cookie[COOKIE_KEY], COOKIE_SECRET);
+        data.sessionStore = sessionStore;
+        sessionStore.get(data.sessionID, function(err, session) {
+            if (err || !session) {
+                return next(new Error('session not found'))
+            } else {
+                data.session = session;
+                data.session.id = data.sessionID;
+                next();
+            }
+        });
+    } else {
+        return next(new Error('Missing cookie headers'));
+    }
 });
 
 
 
-app.get('/room/:id?', function(request, response,next) {
+app.get('/room/:id?', function(request, response, next) {
     //设置cookies
     response.setHeader('Set-Cookie', serialize('isVisit', '1', { expires: 3600, maxAge: 600000 }));
     var id = request.params.id;
@@ -78,7 +76,7 @@ app.get('/room/:id?', function(request, response,next) {
     conn.query(sql, function(err, rows, fields) {
         if (err) throw err;
         if (rows.length > 0) {
-            response.render('chat', { serverip: clientip, room_id: id });
+            response.render('chat', { room_id: id });
         } else {
             response.send('error');
         }
@@ -89,20 +87,20 @@ app.get('/room/:id?', function(request, response,next) {
 //前台客户
 
 
-app.get('/chat.html', function(request, response,next) {
+app.get('/chat.html', function(request, response, next) {
     response.send('error');
 });
 
 
-app.get('/login.html', function(request, response,next) {
+app.get('/login.html', function(request, response, next) {
     if (request.session['islogin']) {
         response.redirect('/admin.html')
     }
-    response.render('login', { serverip: clientip, title: 'Hey', message: 'Hello there!' });
+    response.render('login', { title: 'Hey', message: 'Hello there!' });
 });
 
 
-app.get('/logout.html', function(request, response,next) {
+app.get('/logout.html', function(request, response, next) {
     request.session['islogin'] = false;
     request.session['username'] = null;
     request.session['nickname'] = null;
@@ -111,7 +109,7 @@ app.get('/logout.html', function(request, response,next) {
     response.redirect('/login.html')
 });
 
-app.post('/login.html', function(request, response,next) {
+app.post('/login.html', function(request, response, next) {
     var username = filtersql(request.body.username);
     var password = filtersql(request.body.password);
     if (request.session['islogin']) {
@@ -133,8 +131,7 @@ app.post('/login.html', function(request, response,next) {
                 'nickname=' + request.session['nickname'],
                 'room_id=' + request.session['room_id']
             ];
-            response.setHeader('Set-Cookie', serialize('username', request.session['username']));
-            　 //response.writeHead(200);
+            response.setHeader('Set-Cookie', serialize('username', request.session['username']));　 //response.writeHead(200);
             response.redirect('/admin.html');
         } else {
             request.session['islogin'] = false;
@@ -145,7 +142,7 @@ app.post('/login.html', function(request, response,next) {
 
 });
 
-app.get('/admin.html', function(request, response,next) {
+app.get('/admin.html', function(request, response, next) {
     if (!request.session['islogin']) {
         response.redirect('/login.html')
     } else {
@@ -155,13 +152,12 @@ app.get('/admin.html', function(request, response,next) {
             room_id: request.session['room_id'],
             nickname: request.session['nickname'],
             kefu_id: request.session['kefu_id'],
-            username: request.session['username'],
-            serverip: clientip
+            username: request.session['username']
         });
     }
 
 });
-app.get('/', function(request, response,next) {
+app.get('/', function(request, response, next) {
 
     //每次刷新请求会自己生成一个新的session,如果不加下面代码并不会生成一个新的session
     //request.session.regenerate(function(err) {
@@ -178,6 +174,6 @@ app.all('*', function(request, res) {
 var sockets = require('./sockets.js')
 sockets.run(io);
 
-http.listen(3000, function () {
-	console.log('Server is started: http://127.0.0.1: 3000');
+http.listen(3000, function() {
+    console.log('Server is started: http://127.0.0.1: 3000');
 });

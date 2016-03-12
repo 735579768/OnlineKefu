@@ -1,14 +1,14 @@
 global.sessionid = null;
-global.uinfo=null;
+global.uinfo = null;
 global.debug = function(obj) {
     console.log("--------------------------------------------------------------")
     console.log(obj);
     //io.sockets.emit('debug',obj);
 };
 global.getMessage = function(client, msg) {
-	if(typeof(msg)==typeof('')){
-		msg=html_encode(msg);
-	}
+    if (typeof(msg) == typeof('')) {
+        msg = html_encode(msg);
+    }
     var obj = {
         client: client,
         sid: client.socketid,
@@ -33,40 +33,39 @@ global.getTime = function() {
 global.getColor = function() {
     return '#666;';
 };
-global.filtersql=function(str){
-    var re=/and|delete|or|exec|insert|select|union|update|count|\*|\'|join|>|</ig;
-    str=str.replace(re,'');
+global.filtersql = function(str) {
+    var re = /and|delete|or|exec|insert|select|union|update|count|\*|\'|join|>|</ig;
+    str = str.replace(re, '');
     return str;
 };
-global.filterhtml=function(str){
-    var re=/<.*?>/ig;
-    str=str.replace(re,'');
+global.filterhtml = function(str) {
+    var re = /<.*?>/ig;
+    str = str.replace(re, '');
     return str;
 };
-global.html_encode=function(str)
-{
-  var s = "";
-  if (str.length == 0) return "";
-  s = str.replace(/&/g, "&gt;");
-  s = s.replace(/</g, "&lt;");
-  s = s.replace(/>/g, "&gt;");
-  s = s.replace(/ /g, "&nbsp;");
-  s = s.replace(/\'/g, "&#39;");
-  s = s.replace(/\"/g, "&quot;");
-  s = s.replace(/\n/g, "<br>");
-  return s;
-}
-//设置cookies
-global.serialize = function(name,val,opt){
-　var pairs = [name + '=' +encodeURIComponent(val)];
-　opt = opt || {};
-　if(opt.maxAge) 　pairs.push('Max-Age=' + opt.maxAge);
-　if(opt.domin) 　pairs.push('Domin=' + opt.domin);
-　if(opt.path) 　pairs.push('Path=' + opt.path);
-　if(opt.expires) 　pairs.push('Expires=' + new Date(new Date().getTime()+opt.expires).toUTCString());
-　//if(opt.httpOnly) 　pairs.push('HttpOnly');
-　//if(opt.secure) 　pairs.push('Secure');
-　return pairs.join(';');
+global.html_encode = function(str) {
+        var s = "";
+        if (str.length == 0) return "";
+        s = str.replace(/&/g, "&gt;");
+        s = s.replace(/</g, "&lt;");
+        s = s.replace(/>/g, "&gt;");
+        s = s.replace(/ /g, "&nbsp;");
+        s = s.replace(/\'/g, "&#39;");
+        s = s.replace(/\"/g, "&quot;");
+        s = s.replace(/\n/g, "<br>");
+        return s;
+    }
+    //设置cookies
+global.serialize = function(name, val, opt) {　
+    var pairs = [name + '=' + encodeURIComponent(val)];　
+    opt = opt || {};　
+    if (opt.maxAge)　 pairs.push('Max-Age=' + opt.maxAge);　
+    if (opt.domin)　 pairs.push('Domin=' + opt.domin);　
+    if (opt.path)　 pairs.push('Path=' + opt.path);　
+    if (opt.expires)　 pairs.push('Expires=' + new Date(new Date().getTime() + opt.expires).toUTCString());　 //if(opt.httpOnly) 　pairs.push('HttpOnly');
+    　 //if(opt.secure) 　pairs.push('Secure');
+    　
+    return pairs.join(';');
 };
 global.socketrooms = function() {
     this.rooms = {};
