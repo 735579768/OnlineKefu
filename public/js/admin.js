@@ -9,11 +9,12 @@ var socket=null;
 
 //了天框当前操作对象
 
-window.setSocket=function(id,obj){
+window.setSocket=function(socketid,obj){
 $('#friendlist a').removeClass('hover');
 var _this=$(obj);
 _this.addClass('hover');
-var dataid=_this.attr('data');
+//var dataid=_this.attr('data');
+dataid=socketid;
 //查找是不是有聊天框
 var o=$('#admin_right .chat_message[data="'+dataid+'"]');
 if(o.length>0){
@@ -26,9 +27,6 @@ if(o.length>0){
 	+'<div id="chat_content" class="chat_content g-bg msg-admin cl"></div>'
 	+'<a href="javascript:;" class="btn fr" onclick="$(this).prev().html(\'\');">清屏</a><br>'
 	+'<div class="sendmessage g-bg cl">'
-	+'<a href="javascript:;" onClick="chatconn();" class="btn hide">连接</a>'
-	+'<a href="javascript:;" onClick="disconn();" class="btn hide">断开连接</a>'
-	+'<div  id="status">未连接</div>'
 	+'<textarea type="text" class="form-control input-msg" id="msg_input"></textarea>'
 	+'<input type="hidden" class="kehuid" id="khid" value="'+dataid+'" />'
 	+'<a href="javascript:;" class="btn fr" onclick="sendmsg(this);">发送信息</a>'
@@ -104,6 +102,8 @@ window.chatconn=function(){
 		});
 		//监听message事件，打印消息信息
 		socket.on('message',function(json){
+			//添加了天框
+			setSocket(json.khid,null);
 			var o=$('#admin_right .chat_message[data="'+json.khid+'"]');
 			var chat_contentobj=o.find('.chat_content');
 			var str='';
