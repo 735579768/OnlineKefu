@@ -32,15 +32,6 @@ app.use(session({
     saveUninitialized: true,
     cookie: { maxAge: 1000 * 3600 }
 }));
-//数据库连接
-var db = require('mysql');
-var conn = db.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'adminrootkl',
-    database: 'onlinekefu'
-});
-conn.connect();
 require('./globalvar.js')
 
 
@@ -73,7 +64,7 @@ app.get('/room/:id?', function(request, response, next) {
     var id = request.params.id;
     //查找是否有这个房间
     var sql = "SELECT * from kl_kefu where room_id='" + id + "'";
-    conn.query(sql, function(err, rows, fields) {
+    db.query(sql, function(err, rows, fields) {
         if (err) throw err;
         if (rows.length > 0) {
             response.render('chat', { room_id: id });
@@ -117,7 +108,7 @@ app.post('/login.html', function(request, response, next) {
     }
     var sql = "SELECT * from kl_kefu where username='" + username + "' and password='" + password + "'";
     //查询数据库中的用户名密码
-    conn.query(sql, function(err, rows, fields) {
+    db.query(sql, function(err, rows, fields) {
         if (err) throw err;
         if (rows.length > 0) {
             request.session['islogin'] = true;

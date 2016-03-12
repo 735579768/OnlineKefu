@@ -1,5 +1,14 @@
 global.sessionid = null;
 global.uinfo = null;
+//数据库连接
+global.db = require('mysql').createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'adminrootkl',
+    database: 'onlinekefu'
+});
+db.connect();
+
 global.debug = function(obj) {
     console.log("--------------------------------------------------------------")
     console.log(obj);

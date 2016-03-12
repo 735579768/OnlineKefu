@@ -3,15 +3,6 @@ var debug = function(obj) {
     console.log(obj);
     //io.sockets.emit('debug',obj);
 };
-//数据库连接
-var db = require('mysql');
-var conn = db.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'adminrootkl',
-    database: 'onlinekefu'
-});
-conn.connect();
 
 rooms = new socketrooms();
 console.log(rooms);
@@ -67,7 +58,7 @@ var sockets = {
         };
         //从数据库取客服列表
         var sendkefulist = function(soc, client) {
-            conn.query('SELECT * from kl_kefu limit 10', function(err, rows, fields) {
+            db.query('SELECT * from kl_kefu limit 10', function(err, rows, fields) {
                 if (err) throw err;
                 var kefulist = [];
                 var kefu2 = {};
