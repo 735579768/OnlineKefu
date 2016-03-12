@@ -53,6 +53,10 @@ window.disconn=function(){
 	status.text('未连接');
 	};
 window.sendmsg=function(obj){
+	if(!socket.connected){
+		alert('连接已经断开,请刷新!');
+		return;
+	}
 	var _this=$(obj);
 	var msgobj=_this.parents('.chat_message')
 	var chat_contentobj=msgobj.find('.chat_content');

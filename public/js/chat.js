@@ -28,6 +28,10 @@ window.disconn=function(){
 	status.text('未连接');
 	};
 window.sendmsg=function(){
+	if(!socket.connected){
+		alert('连接已经断开,请刷新!');
+		return;
+	}
 	var msg = msg_input.val();
 	if (!msg) return;
 	var data={'id':'','msg':msg};
