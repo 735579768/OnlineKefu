@@ -24,7 +24,7 @@ global.getMessage = function(client, msg) {
         time: getTime(),
         color: client.color,
         text: msg,
-        username: client.name
+        nickname: client.nickname
     };
     return obj;
 };
@@ -121,7 +121,7 @@ socketrooms.prototype = {
     addkefu: function(client) {
         try {
             this.addroom(client.roomid);
-            this.rooms[client.roomid]['onlinekefu'][client.kefuobj.id] = client;
+            this.rooms[client.roomid]['onlinekefu'][client.kefuid] = client;
         } catch (e) {
             //console.log(e);
         }

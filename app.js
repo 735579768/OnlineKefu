@@ -99,6 +99,10 @@ app.get('/logout.html', function(request, response, next) {
     request.session['nickname'] = null;
     request.session['kefu_id'] = null;
     request.session['room_id'] = null;
+    //一天后过期
+    var hour =- 3600000 * 24
+    request.session.cookie.expires = new Date(Date.now() + hour)
+    request.session.cookie.maxAge = hour
     response.redirect('/login.html')
 });
 
@@ -164,7 +168,7 @@ app.get('/', function(request, response, next) {
     response.send('error');
 });
 
-app.all('*', function(request, res) {
+app.all('*', function(request, response) {
     response.send('error');
 });
 

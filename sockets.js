@@ -31,7 +31,7 @@ var sockets = {
             for (var a in clients) {
                 var o = clients[a];
                 if (o.kefuid == kefuid) {
-                    userlist.push({ 'id': o.socketid, 'name': o.name });
+                    userlist.push({ 'id': o.socketid, 'name': o.nickname });
                 }
             }
             return userlist;
@@ -39,9 +39,9 @@ var sockets = {
         var getusernums = function(roomid) {
             //更新加入房间的人数
             var romnum = 0;
-            /*			for(var a in io.sockets.adapter.rooms[roomid]){
-            					romnum++;
-            				}*/
+            /*          for(var a in io.sockets.adapter.rooms[roomid]){
+                                romnum++;
+                            }*/
             var clients = rooms.getallclient(roomid);
             for (var a in clients) {
                 romnum++;
@@ -73,58 +73,67 @@ var sockets = {
         //WebSocket连接监听
         io.on('connection', function(socket) {
             var session = socket.handshake.session;
+            var cookie = socket.handshake.cookie;
             console.log(session);
-            // 构造客户端对象
-            var client = {
-                kefuobj: null, //如果是客服会有客服的id和名字
-                sessionid: session.id, //会话sessionid
-                socketid: socket.id,
-                kefuid: '', //如果是客户会有一个客服的id
-                name: '', //当前客户端的名字
-                isadmin: 0, //是否是客服
-                roomtitle: '公共聊天大厅',
-                roomid: '', //当前房间号
-                color: getColor()
+            var client = {};
+            if (session.islogin) {
+                //客服
+                socket.join(session.room_id); //加入房间
+                client = {
+                    sessionid: session.id, //会话sessionid
+                    socketid: socket.id,
+                    kefuid: session.kefu_id, //如果是客户会有一个客服的id
+                    nickname: session.nickname, //当前客户端的名字
+                    roomid: session.room_id, //当前房间号
+                    color: getColor()
+                }
+                rooms.addkefu(client);
+                var soc = io.sockets.connected[client.socketid];
+                sendmessage(soc, 'system', getMessage(client, '成功登陆客服系统!'));
+                sendmessage(soc, 'system', getMessage(client, '欢迎\'  ' + client.nickname + '  \'使用客服系统!'));
+                sendmessage(soc, 'username lists', getkefuuserlist(client.roomid, client.kefuid));
+            } else {
+                //客户
+                client = {
+                    sessionid: session.id, //会话sessionid
+                    socketid: socket.id,
+                    kefuid: '', //如果是客户会有一个客服的id
+                    nickname: '', //当前客户端的名字
+                    roomid: '', //当前房间号
+                    color: getColor()
+                }
             }
+
             socket.emit('open');
             ++numUsers;
             //加入房间;
             socket.on('join room', function(myinfo) {
-                socket.roomtitle = myinfo.roomtitle;
-                socket.username = myinfo.myname;
-                client.name = myinfo.myname;
-                client.roomid = myinfo.roomid;
-                client.roomtitle = myinfo.roomtitle;
-                client.isadmin = myinfo.isadmin;
-                client.kefuobj = myinfo.kefuobj;
+                //防止其它客服加入其它房间
+                if (session.islogin) return false;
 
-                var roomid = myinfo.roomid;
+                //客户加入对应房间
+                client.nickname = myinfo.nickname;
+                var roomid = client.roomid = myinfo.roomid;
                 socket.join(roomid);
 
                 var soc = io.sockets.connected[client.socketid];
-                if (client.isadmin == 1) {
-                    rooms.addkefu(client);
-                    sendmessage(soc, 'system', getMessage(client, '成功登陆客服系统!'));
-                    sendmessage(soc, 'system', getMessage(client, '欢迎\'  ' + client.name + '  \'使用客服系统!'));
-                    sendmessage(soc, 'username lists', getkefuuserlist(client.roomid, client.kefuobj.id));
-                    //sendmessage(soc,'usernums','当前'+getusernums(roomid)+'个客户');
-                } else {
-                    rooms.addclient(client);
-                    sendmessage(soc, 'system', getMessage(client, '请问您有什么问题吗?'));
-                    try {
-                        sendkefulist(soc, client);
-                        //conn.end();
-                    } catch (e) {
-                        console.log(e);
-                    }
+                rooms.addclient(client);
+                sendmessage(soc, 'system', getMessage(client, '请问您有什么问题吗?'));
+                try {
+                    sendkefulist(soc, client);
+                    //conn.end();
+                } catch (e) {
+                    console.log(e);
                 }
-                console.log('当前用户' + rooms.getclientnums(client.roomid) + '个');
+
+                console.log('当前房间 '+client.roomid+' 用户' + rooms.getclientnums(client.roomid) + '个');
             });
             socket.on('set kefu', function(id) {
                 //为客户设置客服
                 //保存原来的客服id
                 var srckefuid = client.kefuid;
                 client.kefuid = id;
+                session['kefuid']=id;
                 rooms.updateclient(client);
 
                 //取客服名字
@@ -135,15 +144,14 @@ var sockets = {
                 } else {
                     var socketid = rooms.getonlinekefubyid(client.roomid, id).socketid;
                     var soc = io.sockets.connected[socketid];
-                    sendmessage(soc, 'system', getMessage(client, '客户' + client.name + '已经连接此客服!'));
+                    sendmessage(soc, 'system', getMessage(client, '客户' + client.nickname + '已经连接此客服!'));
                     sendmessage(soc, 'username lists', getkefuuserlist(client.roomid, client.kefuid));
                 }
-
                 //更新原来的客服id
                 if (srckefuid) {
                     var socketid = rooms.getonlinekefubyid(client.roomid, srckefuid).socketid;
                     var soc = io.sockets.connected[socketid];
-                    sendmessage(soc, 'system', getMessage(client, '客户' + client.name + '已经离开!'));
+                    sendmessage(soc, 'system', getMessage(client, '客户' + client.nickname + '已经离开!'));
                     sendmessage(soc, 'username lists', getkefuuserlist(client.roomid, srckefuid));
                 }
             });
@@ -155,24 +163,25 @@ var sockets = {
                 msg = msg.msg;
 
                 //提醒管理员选择一个客户进行回复
-                if (client.isadmin == 1 && !khid) {
+                if (session.islogin && !khid) {
                     sendmessage(io.sockets.connected[client.socketid], 'system', getMessage(client, '请选择一个客户!'));
                     return false;
                 }
                 //如果是管理员,对指定客户回复
-                if (client.isadmin == 1) {
+                if (session.islogin) {
+                    //回复给指定客户
                     sendmessage(io.sockets.connected[khid], 'message', getMessage(client, msg));
                     //对自己进行回复
                     var mesg = getMessage(client, msg);
                     mesg['khid'] = khid; //返回当前了天的客户socketid
                     sendmessage(io.sockets.connected[client.socketid], 'message', mesg);
                 } else {
-                    if (client.kefuid) {
+                    if (session.kefuid) {
                         if (rooms.isonline(client.roomid, client.kefuid)) {
                             //客服在线则转发给管理员
                             var socketid = rooms.getonlinekefubyid(client.roomid, client.kefuid).socketid;
                             var mesg = getMessage(client, msg);
-                            mesg['khid'] = client.socketid; //返回当前了天的客户socketid
+                            mesg['khid'] = client.socketid; //返回当前正在了天的客户socketid方便把内容添加到对应的了天框中
                             sendmessage(io.sockets.connected[socketid], 'message', mesg);
                         } else {
                             //临时存到数据库
@@ -194,17 +203,17 @@ var sockets = {
                         time: getTime(),
                         color: client.color,
                         username: '系统消息',
-                        text: client.name + ' 已经退出',
+                        text: client.nickname + ' 已经退出',
                         id: client.socketid
                     };
 
-                    if (client.isadmin == 1) {
+                    if (session.islogin) {
                         rooms.deletekefu(client);
                     } else {
                         rooms.deleteclient(client);
                     }
                     //发送给管理员
-                    if (client.isadmin != 1 && rooms.getonlinekefubyid(client.roomid, client.kefuid)) {
+                    if (!session.islogin && rooms.getonlinekefubyid(client.roomid, client.kefuid)) {
                         var socketid = rooms.getonlinekefubyid(client.roomid, client.kefuid).socketid;
                         var soc = io.sockets.connected[socketid];
                         sendmessage(soc, 'userleft', obj);
@@ -213,7 +222,7 @@ var sockets = {
                     } else {
                         //如果客服离线就通知当前客服下面的客户
                     }
-                    console.log(client.name + '离开');
+                    console.log(client.nickname + '离开');
                     console.log('当前网站在线客户' + rooms.getclientnums(client.roomid) + '个');
                 } catch (e) {
                     console.log(e);

@@ -4,7 +4,7 @@ var chat_content = $('#chat_content');
 var status = $('#status');
 var msg_input = $('#msg_input');
 var jihuorooms=$('#jihuorooms');
-var myName = myinfo.myname;
+var myName = '客服';
 var socket=null;
 
 //了天框当前操作对象
@@ -77,8 +77,6 @@ window.chatconn=function(){
 		//收到server的连接确认
 		socket.on('open',function(){
 			status.text(myName+':连接成功,输入消息:');
-			//进入指定客服聊天室id
-			socket.emit('join room',myinfo);
 		});
 
 		//监听system事件，判断welcome或者disconnect，打印系统消息信息
@@ -109,7 +107,7 @@ window.chatconn=function(){
 			var o=$('#admin_right .chat_message[data="'+json.khid+'"]');
 			var chat_contentobj=o.find('.chat_content');
 			var str='';
-			if(json.sid!=socket.id){
+			if(json.sid!='/#'+socket.id){
 			str = '<div class="chat-message message-l"><div class="nickname" style="color:[COLOR];">[USERNAME]:@ <span class="message-time">[TIME]</span></div><div class="message-text"> [MESSAGE]</div> </div>';
 			}else{
 			str = '<div class="chat-message message-r"><div class="nickname" style="color:[COLOR];"><span class="message-time">[TIME]</span>@: [USERNAME]</div><div class="message-text"> [MESSAGE]</div> </div>';
@@ -117,7 +115,7 @@ window.chatconn=function(){
 			str=str.replace('[COLOR]',json.color);
 			str=str.replace('[TIME]',json.time);
 			str=str.replace('[MESSAGE]',json.text);
-			str=str.replace('[USERNAME]',json.username);
+			str=str.replace('[USERNAME]',json.nickname);
 			chat_contentobj.append(str);
 			scrollbot();
 		});

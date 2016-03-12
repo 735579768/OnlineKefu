@@ -6,7 +6,7 @@ var chat_content = $('#chat_content');
 var status = $('#status');
 var msg_input = $('#msg_input');
 var jihuorooms=$('#jihuorooms');
-var myName = myinfo.myname;
+var myName = myinfo.nickname;
 var socket=null;
 window.setkefu=function(id){
 	socket.emit('set kefu',id);
@@ -46,11 +46,10 @@ window.chatconn=function(){
 			//进入指定客服聊天室id
 			socket.emit('join room',myinfo);
 		});
-
 		//监听message事件，打印消息信息
 		socket.on('message',function(json){
 			var str='';
-			if(json.sid!=socket.id){
+			if(json.sid!='/#'+socket.id){
 			str = '<div class="chat-message message-l"><div class="nickname" style="color:[COLOR];">[USERNAME]:@ <span class="message-time">[TIME]</span></div><div class="message-text"> [MESSAGE]</div> </div>';
 			}else{
 			str = '<div class="chat-message message-r"><div class="nickname" style="color:[COLOR];"><span class="message-time">[TIME]</span>@: [USERNAME]</div><div class="message-text"> [MESSAGE]</div> </div>';
@@ -58,7 +57,7 @@ window.chatconn=function(){
 			str=str.replace('[COLOR]',json.color);
 			str=str.replace('[TIME]',json.time);
 			str=str.replace('[MESSAGE]',json.text);
-			str=str.replace('[USERNAME]',json.username);
+			str=str.replace('[USERNAME]',json.nickname);
 			chat_content.append(str);
 			scrollbot();
 		});
