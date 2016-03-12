@@ -129,6 +129,7 @@ var sockets = {
                 console.log('当前房间 '+client.roomid+' 用户' + rooms.getclientnums(client.roomid) + '个');
             });
             socket.on('set kefu', function(id) {
+                try{
                 //为客户设置客服
                 //保存原来的客服id
                 var srckefuid = client.kefuid;
@@ -154,6 +155,9 @@ var sockets = {
                     sendmessage(soc, 'system', getMessage(client, '客户' + client.nickname + '已经离开!'));
                     sendmessage(soc, 'username lists', getkefuuserlist(client.roomid, srckefuid));
                 }
+            }catch(e){
+                console.log(e);
+            }
             });
             // 对message事件的监听
             socket.on('message', function(msg) {
