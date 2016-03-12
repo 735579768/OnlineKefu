@@ -15,25 +15,7 @@ var express = require('express'),
 
 const COOKIE_SECRET = 'secret',
     COOKIE_KEY = 'express.sid';
-/*io.use(function(socket, next) {
-    var data = socket.handshake || socket.request;
-    if (data.headers.cookie) {
-        data.cookie = cookie.parse(data.headers.cookie);
-        data.sessionID = cookieParser.signedCookie(data.cookie[COOKIE_KEY], COOKIE_SECRET);
-        data.sessionStore = sessionStore;
-        sessionStore.get(data.sessionID, function (err, session) {
-            if (err || !session) {
-                return next(new Error('session not found'))
-            } else {
-                data.session = session;
-                data.session.id = data.sessionID;
-                next();
-            }
-        });
-    } else {
-        return next(new Error('Missing cookie headers'));
-    }
-});*/
+
 //数据库连接
 var db = require('mysql');
 var conn = db.createConnection({
@@ -61,7 +43,7 @@ app.use(session({
     saveUninitialized: true,
     cookie: { maxAge: 1000 * 3600 }
 }));
-app.use(function(req, res, next) {
+/*app.use(function(req, res, next) {
     var views = req.session.views
     if (!views) {
         views = req.session.views = {}
@@ -71,7 +53,7 @@ app.use(function(req, res, next) {
         // count the views
     views[pathname] = (views[pathname] || 0) + 1
     next()
-});
+});*/
 
 /*********取post参数时使用*******/
 app.use(bodyParser.json()); // for parsing application/json
@@ -85,6 +67,29 @@ app.engine('.html', require('ejs').__express);
 app.set('view engine', 'html');
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+
+
+
+/*io.use(function(socket, next) {
+    var data = socket.handshake || socket.request;
+    if (data.headers.cookie) {
+        data.cookie = cookie.parse(data.headers.cookie);
+        data.sessionID = cookieParser.signedCookie(data.cookie[COOKIE_KEY], COOKIE_SECRET);
+        data.sessionStore = sessionStore;
+        sessionStore.get(data.sessionID, function (err, session) {
+            if (err || !session) {
+                return next(new Error('session not found'))
+            } else {
+                data.session = session;
+                data.session.id = data.sessionID;
+                next();
+            }
+        });
+    } else {
+        return next(new Error('Missing cookie headers'));
+    }
+});*/
 // 指定webscoket的客户端的html文件
 //打开指定的房间
 //前台客户
