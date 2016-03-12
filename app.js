@@ -59,14 +59,18 @@ io.use(function(socket, next) {
 
 
 app.get('/room/:id?', function(request, response, next) {
-    //设置cookies
-    response.setHeader('Set-Cookie', serialize('isVisit', '1', { expires: 3600, maxAge: 600000 }));
+    //如果是管理员直接进入后台管理
+    if (request.session['islogin']) {
+        response.redirect('/admin.html')
+    }
+   // response.setHeader('Set-Cookie', serialize('isVisit', '1', { expires: 3600, maxAge: 600000 }));
     var id = request.params.id;
     //查找是否有这个房间
     var sql = "SELECT * from kl_kefu where room_id='" + id + "'";
     db.query(sql, function(err, rows, fields) {
         if (err) throw err;
         if (rows.length > 0) {
+            request.session['room_id'] = id;
             response.render('chat', { room_id: id });
         } else {
             response.send('error');
@@ -76,13 +80,6 @@ app.get('/room/:id?', function(request, response, next) {
 // 指定webscoket的客户端的html文件
 //打开指定的房间
 //前台客户
-
-
-app.get('/chat.html', function(request, response, next) {
-    response.send('error');
-});
-
-
 app.get('/login.html', function(request, response, next) {
     if (request.session['islogin']) {
         response.redirect('/admin.html')
