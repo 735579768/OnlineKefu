@@ -11,7 +11,7 @@ var //connect = require('connect'),
     sessionStore = new MemoryStore();
 
 const COOKIE_SECRET = 'secret',
-    COOKIE_KEY = 'express.sid';
+    COOKIE_KEY = 'connect.sid';
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
@@ -27,10 +27,10 @@ app.set('view engine', 'html');
 app.use(session({
     store: sessionStore,
     secret: 'secret',
-    key: 'express.sid',
+    key: 'connect.sid',
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 1000 * 3600 }
+    cookie: { maxAge: 7 * 24 * 3600, expires: new Date(Date.now() + 1000 * 3600) }
 }));
 require('./globalvar.js')
 
@@ -63,7 +63,12 @@ app.get('/room/:id?', function(request, response, next) {
     if (request.session['islogin']) {
         response.redirect('/admin.html')
     }
-   // response.setHeader('Set-Cookie', serialize('isVisit', '1', { expires: 3600, maxAge: 600000 }));
+
+    //一天后过期
+    var hour = 3600000 * 24
+    request.session.cookie.expires = new Date(Date.now() + hour)
+    request.session.cookie.maxAge = hour
+        // response.setHeader('Set-Cookie', serialize('isVisit', '1', { expires: 3600, maxAge: 600000 }));
     var id = request.params.id;
     //查找是否有这个房间
     var sql = "SELECT * from kl_kefu where room_id='" + id + "'";
@@ -113,6 +118,11 @@ app.post('/login.html', function(request, response, next) {
             request.session['nickname'] = rows[0]['name'];
             request.session['kefu_id'] = rows[0]['kefu_id'];
             request.session['room_id'] = rows[0]['room_id'];
+
+            //一天后过期
+            var hour = 3600000 * 24
+            request.session.cookie.expires = new Date(Date.now() + hour)
+            request.session.cookie.maxAge = hour
             var mycookes = [
                 'username=' + request.session['username'],
                 'kefu_id=' + request.session['kefu_id'],
