@@ -176,6 +176,6 @@ app.all('*', function(request, response) {
 var sockets = require('./sockets.js')
 sockets.run(io);
 
-http.listen(3000, function() {
-    console.log('Server is started: http://127.0.0.1: 3000');
+http.listen(4000, function() {
+    console.log('Server is started: http://127.0.0.1: 4000');
 });

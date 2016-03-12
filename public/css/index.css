@@ -3,8 +3,8 @@ a{color:#000;}
 .g-bg{background:#fff;}
 p{line-height:18px;padding:2px;}
 .cl:after{content:'';display:block;width:100%;clear:both;}
-.container{width:80%;margin:0px auto;background: #fff;}
-.chat_content{height:300px;margin:10px auto;overflow:auto;padding:5px;border-radius:5px;border:1px solid #CCC;}
+.container{width:100%;margin:0px auto;background: #fff;}
+.chat_content{height:300px;margin:10px auto;overflow:auto;padding:5px;border-radius:5px;}
 #input{border-radius:2px;border:1px solid #ccc;margin-top:10px;padding:5px;width:98%;display:block;}
 .room li{float:left;padding:0px 10px;height:30px;line-height:30px;}
 .chat-message{margin-bottom:10px;}
@@ -16,15 +16,12 @@ p{line-height:18px;padding:2px;}
 .message-l .message-text{padding-left:20px;}
 .message-r .message-text{padding-right:20px;}
 .message-l .message-time,.message-r .message-time{}
-#jihuorooms li{display:inline-block;margin-right:10px;}
-#jihuorooms li a{border:solid 1px #ededed;height:30px;width:60px;line-height:30px;text-align:center;}
-#jihuorooms li a:hover{background:#ededed;}
 .chat_content_title{padding:5px 10px;height: 30px;}
-#chat_container{position:relative;}
+.chat_container{position:relative;border:1px solid #CCC;}
 #chat_left{position:absolute;height:100%;top:0px;left:0px;width:150px;}
 #friendlist li a{display:block;padding-left:10px;border-bottom:solid 1px #ededed; color:#000;}
-.friendtitle{font-size:14px;font-weight:bolder;display:block;text-align:center;border-bottom:solid 2px #ededed;margin-bottom:10px;}
-.sendmessage{padding: 10px 20px;border:solid 1px #ccc;}
+.friendtitle{font-size:14px;font-weight:bolder;display:block;text-align:center;border-bottom:solid 1px #ededed;margin-bottom:10px;}
+.sendmessage{padding: 10px 0px 0px 0px;}
 .sysmsg{margin-bottom:0px;}
 .sysmsg .message-text{color: #aaa;}
 
