@@ -202,9 +202,9 @@ var sockets = {
                     var obj = {
                         time: getTime(),
                         color: client.color,
-                        username: '系统消息',
+                        nickname: '系统消息',
                         text: client.nickname + ' 已经退出',
-                        id: client.socketid
+                        khid: client.socketid
                     };
 
                     if (session.islogin) {

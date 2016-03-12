@@ -95,6 +95,8 @@ window.chatconn=function(){
 			str=str.replace('[TIME]',json.time);
 			str=str.replace('[MESSAGE]',json.text);
 			str=str.replace('[USERNAME]','系统消息');
+			$('#admin_right .chat_message[data="'+json.khid+'"]').remove();
+			$('#admin_right .chat_message[data="home"').remove();
 			chat_content.append(str);
 			scrollbot();
 		});
