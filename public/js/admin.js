@@ -96,7 +96,7 @@ window.chatconn=function(){
 			str=str.replace('[MESSAGE]',json.text);
 			str=str.replace('[USERNAME]','系统消息');
 			$('#admin_right .chat_message[data="'+json.khid+'"]').remove();
-			$('#admin_right .chat_message[data="home"').remove();
+			$('#admin_right .chat_message[data="home"').show();
 			chat_content.append(str);
 			scrollbot();
 		});
