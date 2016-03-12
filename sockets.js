@@ -81,10 +81,12 @@ var sockets = {
         };
         //WebSocket连接监听
         io.on('connection', function(socket) {
+            var session = socket.handshake.session;
+            console.log(session);
             // 构造客户端对象
             var client = {
                 kefuobj: null, //如果是客服会有客服的id和名字
-                sessionid: sessionid, //会话sessionid
+                sessionid: session.id, //会话sessionid
                 socketid: socket.id,
                 kefuid: '', //如果是客户会有一个客服的id
                 name: '', //当前客户端的名字

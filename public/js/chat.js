@@ -37,7 +37,8 @@ window.sendmsg=function(){
 window.chatconn=function(){
 		if(socket)return;
 			//建立websocket连接对象
-		socket = io.connect('http://localhost:4000',{'force new connection': true});
+		//socket = io.connect('http://localhost:3000',{'force new connection': true});
+		socket = io();
 
 		//收到server的连接确认
 		socket.on('open',function(){
