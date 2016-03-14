@@ -17,6 +17,7 @@ _this.addClass('hover');
 dataid=socketid;
 //查找是不是有聊天框
 var o=$('#admin_right .chat_message[data="'+dataid+'"]');
+$('#kehuid').val(dataid);
 if(o.length>0){
 	$('#admin_right .chat_message').hide();
 	o.show();
@@ -31,7 +32,6 @@ if(o.length>0){
             +'<a href="javascript:;" class="btn fr" onclick="sendmsg(this);">发送信息</a>'
             +'<div class="input-text">'
             +'<input type="text" class="m-form-control input-msg" id="msg_input">'
-            +'<input type="hidden" class="kefuid" id="khid" value="'+dataid+'" />'
             +'</div>'
             +'</div>'
 	+'</div>'
@@ -61,7 +61,7 @@ window.sendmsg=function(obj){
 	var chat_kehuobj=msgobj.find('.kehuid');
 
 	var msg = chat_msgobj.val();
-	var socketid=chat_kehuobj.val();
+	var socketid=$('#kehuid').val();
 	if (!msg) return;
 	var data={'id':socketid,'msg':msg};
 	socket.emit('message',$.toJSON(data));
