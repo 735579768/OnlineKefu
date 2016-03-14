@@ -11,6 +11,7 @@
 <link rel="stylesheet" type="text/css" href="/css/reset.css" />
 <link rel="stylesheet" type="text/css" href="/css/index.css" />
 <script src="/js/jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/functions.js" type="text/javascript"></script>
 <script src="/js/jquery.json.min.js" type="text/javascript"></script>
 <script src="/socket.io/socket.io.js" type="text/javascript"></script>
 <script>
@@ -21,8 +22,15 @@ $(function(){
 });
 var myinfo={
 	 roomid:'<%=room_id%>',
-	 nickname:'游客'+Math.floor(Math.random()*100),
+	 nickname:''
 	};
+var nickname=readCookie('nickname');
+if(nickname){
+    myinfo.nickname=nickname;
+}else{
+myinfo.nickname='游客'+Math.floor(Math.random()*100);
+writeCookie('nickname',myinfo.nickname);
+}
 </script>
 </head>
 <body>

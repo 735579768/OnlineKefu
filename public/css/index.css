@@ -28,7 +28,7 @@ p{line-height:18px;padding:2px;}
 .message-l .message-text{padding-left:5px;}
 .message-r .message-text{padding-right:5px;}
 .message-l .message-time,.message-r .message-time{}
-.chat_content_title{padding:5px 10px;height:30px;}
+.chat_content_title{padding:5px 10px;}
 .chat_container{position:relative;}
 #chat_left{position:absolute;height:100%;top:0px;left:0px;width:150px;border:1px solid #CCC;}
 #friendlist li a{display:block;padding-left:10px;border-bottom:solid 1px #ededed;color:#000;}
@@ -49,3 +49,5 @@ p{line-height:18px;padding:2px;}
 
 /**登陆框**/
 .loginform{display:inline-block;margin:0px auto;background:#fff;top:20%;padding:10px;border-radius:5px;position:absolute;left:50%;margin-left:-221px;box-shadow:2px 2px 4px #ccc;}
+.alluser{height: 50px; overflow: auto;}
+.alluser li{ float: left;}
