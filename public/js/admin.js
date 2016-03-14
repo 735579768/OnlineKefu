@@ -107,7 +107,7 @@ window.chatconn=function(){
 			var o=$('#admin_right .chat_message[data="'+json.khid+'"]');
 			var chat_contentobj=o.find('.chat_content');
 			var str='';
-			if(json.sid!='/#'+socket.id){
+			if(json.sid!=socket.id){
 			str = '<div class="chat-message message-l"><div class="nickname" style="color:[COLOR];">[USERNAME]:@ <span class="message-time">[TIME]</span></div><div class="message-text"> [MESSAGE]</div> </div>';
 			}else{
 			str = '<div class="chat-message message-r"><div class="nickname" style="color:[COLOR];"><span class="message-time">[TIME]</span>@: [USERNAME]</div><div class="message-text"> [MESSAGE]</div> </div>';

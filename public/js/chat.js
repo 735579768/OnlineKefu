@@ -61,7 +61,7 @@ window.chatconn=function(){
 		//监听message事件，打印消息信息
 		socket.on('message',function(json){
 			var str='';
-			if(json.sid!='/#'+socket.id){
+			if(json.sid!=socket.id){
 			str = '<div class="chat-message message-l"><div class="nickname" style="color:[COLOR];">[USERNAME]:@ <span class="message-time">[TIME]</span></div><div class="message-text"> [MESSAGE]</div> </div>';
 			}else{
 			str = '<div class="chat-message message-r"><div class="nickname" style="color:[COLOR];"><span class="message-time">[TIME]</span>@: [USERNAME]</div><div class="message-text"> [MESSAGE]</div> </div>';
