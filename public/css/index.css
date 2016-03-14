@@ -1,24 +1,21 @@
 /* body{background:url(../images/1.jpg) repeat;color:#000;} */
-body{ -webkit-tap-highlight-color:rgba(0,0,0,0); font-size: 12px;}
-/****手机端表单样式**/
-.m-form{margin: 10px 0px;}
-.m-form-group{border: solid 1px #ededed;padding: 0px 5px;     margin: 0px 10px 10px 10px;}
-select.m-form-control{height: 36px;padding: 0px;}
-.m-form-control{width: 100%; display: block; padding: 3px 0px; height: 30px; border: solid 1px #ededed;background: #fff;}
-.m-form-group .m-form-control{border: none;}
+body{-webkit-tap-highlight-color:rgba(0,0,0,0);font-size:12px;}
 
-.m-btn,
-.m-btn:link,
-.m-btn:active,
-.m-btn:hover,
-.m-btn:visited{padding: 2px 10px; font-size: 12px; background: #6BC168; color: #fff;display: inline-block;border-radius: 5px;}
-.m-btn-large{padding:5px 20px !important; font-size: 14px !important;}
+/****手机端表单样式**/
+.m-form{margin:10px 0px;}
+.m-form-group{border:solid 1px #ededed;padding:0px 5px;margin:0px 10px 10px 10px;}
+select.m-form-control{height:36px;padding:0px;}
+.m-form-control{width:100%;display:block;padding:3px 0px;height:30px;border:solid 1px #ededed;background:#fff;}
+.m-form-group .m-form-control{border:none;}
+.m-btn,.m-btn:link,.m-btn:active,.m-btn:hover,.m-btn:visited{padding:2px 10px;font-size:12px;background:#6BC168;color:#fff;display:inline-block;border-radius:5px;}
+.m-btn-large{padding:5px 20px!important;font-size:14px!important;}
+
 /**************************/
 a{color:#000;}
 .g-bg{background:#fff;}
 p{line-height:18px;padding:2px;}
 .cl:after{content:'';display:block;width:100%;clear:both;}
-.container{width:100%;margin:0px auto;background:#fff; overflow: hidden;}
+.container{width:100%;margin:0px auto;background:#fff;overflow:hidden;}
 .chat_content{height:300px;margin:10px auto;overflow:auto;padding:5px;border-radius:5px;}
 #input{border-radius:2px;border:1px solid #ccc;margin-top:10px;padding:5px;width:98%;display:block;}
 .room li{float:left;padding:0px 10px;height:30px;line-height:30px;}
@@ -35,19 +32,20 @@ p{line-height:18px;padding:2px;}
 .chat_container{position:relative;}
 #chat_left{position:absolute;height:100%;top:0px;left:0px;width:150px;border:1px solid #CCC;}
 #friendlist li a{display:block;padding-left:10px;border-bottom:solid 1px #ededed;color:#000;}
-.friendtitle{font-size:14px;font-weight:bolder;display:block;text-align:center;border-bottom:solid 1px #ededed;}
+.friendtitle{font-size:14px;font-weight:bolder;display:block;text-align:center;border-bottom:solid 1px #ededed;background: #ededed;}
 .sendmessage{padding:10px 0px 0px 0px;}
 .sysmsg{margin-bottom:0px;}
 .sysmsg .message-text{color:#aaa;}
 #friendlist a.hover{background:#ededed;}
 .msg-kefu{margin-left:0px;}
-.admin-right{margin-left:160px;height: 100%;}
-.chat-right{padding:0px 5px; height: 100%;}
+.admin-right{margin-left:160px;height:100%;}
+.chat-right{padding:0px 5px;height:100%;}
 .input-msg{margin:10px 0px;}
 .selectkefu{}
 .selectkefu a{padding:0px 5px;}
-.admin-container{position:relative; height: 100%;}
-.input-wrap{display: block;}
-.input-wrap .input-text{display: block; margin-right: 100px;}
+.admin-container{position:relative;height:100%;}
+.input-wrap{display:block;}
+.input-wrap .input-text{display:block;margin-right:100px;}
+
 /**登陆框**/
-.loginform{display:inline-block;margin:0px auto;background:#fff;top: 20%; padding:10px;border-radius:5px;position:absolute;left:50%;margin-left:-221px; box-shadow: 2px 2px 4px #ccc;}
+.loginform{display:inline-block;margin:0px auto;background:#fff;top:20%;padding:10px;border-radius:5px;position:absolute;left:50%;margin-left:-221px;box-shadow:2px 2px 4px #ccc;}
