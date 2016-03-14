@@ -15,7 +15,9 @@
 <script src="/socket.io/socket.io.js" type="text/javascript"></script>
 <script>
 $(function(){
-    var scrwidth=$(window).height();
+    var scrheight=$(window).height();
+    $('#container').height(scrheight);
+    $('#chat_container').height(scrheight-90);
 });
 var myinfo={
 	 roomid:'<%=room_id%>',
@@ -24,7 +26,7 @@ var myinfo={
 </script>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="container">
         <div class="chat-right">
             <div id="chat_container" class="chat_container">
                 <div id="chat_content" class="chat_content g-bg msg-kehu cl"></div>
@@ -36,7 +38,7 @@ var myinfo={
                         <div class="input-wrap">
                             <a href="javascript:;" class="btn fr" onclick="sendmsg(this);">发送信息</a>
                             <div class="input-text">
-                            <input type="text" class="form-control input-msg" id="msg_input">
+                            <input type="text" class="m-form-control input-msg" id="msg_input">
                             <input type="hidden" class="kefuid" id="khid" value="" />
                             </div>
 

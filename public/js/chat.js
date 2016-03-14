@@ -10,8 +10,7 @@ var myName = myinfo.nickname;
 var socket=null;
 window.setkefu=function(id){
 	if(!socket.connected){
-		alert('连接已经断开,请刷新!');
-		return;
+		chatconn();
 	}
 	socket.emit('set kefu',id);
 };
@@ -22,8 +21,7 @@ window.scrollbot=function(){
 	};
 window.joinroom=function(){
 	if(!socket.connected){
-		alert('连接已经断开,请刷新!');
-		return;
+		chatconn();
 	}
 	var args=arguments;
 	myinfo.roomid=args[0]?args[0]:1;
@@ -37,8 +35,7 @@ window.disconn=function(){
 	};
 window.sendmsg=function(){
 	if(!socket.connected){
-		alert('连接已经断开,请刷新!');
-		return;
+		chatconn();
 	}
 	var msg = msg_input.val();
 	if (!msg) return;

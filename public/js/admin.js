@@ -24,12 +24,16 @@ if(o.length>0){
 	$('#admin_right .chat_message').hide();
 	var str=''
 	+'<div class="chat_message" data="'+dataid+'">'
-	+'<div id="chat_content" class="chat_content g-bg msg-admin cl"></div>'
+	+'<div  class="chat_content g-bg msg-admin cl" style="height:'+chat_content_height+'px;"></div>'
 	+'<a href="javascript:;" class="btn fr" onclick="$(this).prev().html(\'\');">清屏</a><br>'
 	+'<div class="sendmessage g-bg cl">'
-	+'<textarea type="text" class="form-control input-msg" id="msg_input"></textarea>'
-	+'<input type="hidden" class="kehuid" id="khid" value="'+dataid+'" />'
-	+'<a href="javascript:;" class="btn fr" onclick="sendmsg(this);">发送信息</a>'
+            +'<div class="input-wrap">'
+            +'<a href="javascript:;" class="btn fr" onclick="sendmsg(this);">发送信息</a>'
+            +'<div class="input-text">'
+            +'<input type="text" class="m-form-control input-msg" id="msg_input">'
+            +'<input type="hidden" class="kefuid" id="khid" value="'+dataid+'" />'
+            +'</div>'
+            +'</div>'
 	+'</div>'
 	+'</div>';
 	$('#admin_right').append(str);
@@ -48,8 +52,7 @@ window.disconn=function(){
 	};
 window.sendmsg=function(obj){
 	if(!socket.connected){
-		alert('连接已经断开,请刷新!');
-		return;
+		chatconn();
 	}
 	var _this=$(obj);
 	var msgobj=_this.parents('.chat_message')
