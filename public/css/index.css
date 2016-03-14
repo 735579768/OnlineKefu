@@ -35,7 +35,7 @@ p{line-height:18px;padding:2px;}
 .chat_container{position:relative;}
 #chat_left{position:absolute;height:100%;top:0px;left:0px;width:150px;border:1px solid #CCC;}
 #friendlist li a{display:block;padding-left:10px;border-bottom:solid 1px #ededed;color:#000;}
-.friendtitle{font-size:14px;font-weight:bolder;display:block;text-align:center;border-bottom:solid 1px #ededed;margin-bottom:10px;}
+.friendtitle{font-size:14px;font-weight:bolder;display:block;text-align:center;border-bottom:solid 1px #ededed;}
 .sendmessage{padding:10px 0px 0px 0px;}
 .sysmsg{margin-bottom:0px;}
 .sysmsg .message-text{color:#aaa;}
