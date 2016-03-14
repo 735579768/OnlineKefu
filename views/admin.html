@@ -42,9 +42,17 @@ var myinfo={
                         <a href="javascript:;" onClick="chatconn();" class="btn hide">连接</a>
                         <a href="javascript:;" onClick="disconn();" class="btn hide">断开连接</a>
                         <div id="status">未连接</div>
-                        <textarea type="text" class="form-control input-msg" id="msg_input"></textarea>
-                        <input type="hidden" class="kefuid" id="khid" value="" />
-                        <a href="javascript:;" class="btn fr" onclick="sendmsg(this);">发送信息</a>
+                        <div class="input-wrap">
+                            <a href="javascript:;" class="btn fr" onclick="sendmsg(this);">发送信息</a>
+                            <div class="input-text">
+                            <input type="text" class="form-control input-msg" id="msg_input">
+                            <input type="hidden" class="kefuid" id="khid" value="" />
+                            </div>
+
+                        </div>
+
+
+
                     </div>
                 </div>
             </div>
