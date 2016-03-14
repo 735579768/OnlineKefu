@@ -108,18 +108,10 @@ window.chatconn=function(){
 		});
 	};
 	//通过“回车”提交聊天信息
-/*	msg_input.keydown(function(e) {
+	msg_input.keydown(function(e) {
 		if (e.keyCode === 13) {
-			if(!socket){
-				alert('没有连接');
-				return false;
-				}
-			var msg = $(this).val();
-			if (!msg) return;
-			var data={'id':'','msg':msg};
-			socket.emit('message',$.toJSON(data));
-			$(this).val('');
+			sendmsg();
 		}
-	});*/
+	});
 chatconn();
 });
