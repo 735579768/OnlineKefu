@@ -14,7 +14,9 @@ const COOKIE_SECRET = 'secret',
     COOKIE_KEY = 'connect.sid';
 
 app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({
+    extended: true
+})); // for parsing application/x-www-form-urlencoded
 app.use(cookieParser());
 app.use(express.static(__dirname + '/public'));
 /************输出页面**************************/
@@ -30,7 +32,10 @@ app.use(session({
     key: 'connect.sid',
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 7 * 24 * 3600, expires: new Date(Date.now() + 1000 * 3600) }
+    cookie: {
+        maxAge: 7 * 24 * 3600,
+        expires: new Date(Date.now() + 1000 * 3600)
+    }
 }));
 require('./globalvar.js')
 
@@ -76,7 +81,9 @@ app.get('/room/:id?', function(request, response, next) {
         if (err) throw err;
         if (rows.length > 0) {
             request.session['room_id'] = id;
-            response.render('chat', { room_id: id });
+            response.render('chat', {
+                room_id: id
+            });
         } else {
             response.send('error');
         }
@@ -89,7 +96,10 @@ app.get('/login.html', function(request, response, next) {
     if (request.session['islogin']) {
         response.redirect('/admin.html')
     }
-    response.render('login', { title: 'Hey', message: 'Hello there!' });
+    response.render('login', {
+        title: 'Hey',
+        message: 'Hello there!'
+    });
 });
 
 
@@ -100,7 +110,7 @@ app.get('/logout.html', function(request, response, next) {
     request.session['kefu_id'] = null;
     request.session['room_id'] = null;
     //一天后过期
-    var hour =- 3600000 * 24
+    var hour = -3600000 * 24
     request.session.cookie.expires = new Date(Date.now() + hour)
     request.session.cookie.maxAge = hour
     response.redirect('/login.html')
