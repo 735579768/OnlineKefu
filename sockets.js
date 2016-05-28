@@ -1,5 +1,5 @@
 var debug = function(obj) {
-    console.log("--------------------------------------------------------------")
+    console.log("-------------------------------------------------------------")
     console.log(obj);
     //io.sockets.emit('debug',obj);
 };
