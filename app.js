@@ -13,12 +13,13 @@ var //connect = require('connect'),
 const COOKIE_SECRET = 'secret',
     COOKIE_KEY = 'connect.sid';
 
-app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
-})); // for parsing application/x-www-form-urlencoded
+}));
 app.use(cookieParser());
 app.use(express.static(__dirname + '/public'));
+
 /************输出页面**************************/
 app.set('views', './views');
 //app.set('view engine', 'ejs');
@@ -40,7 +41,7 @@ app.use(session({
 require('./globalvar.js')
 
 
-
+//使io支持session
 io.use(function(socket, next) {
     var data = socket.handshake || socket.request;
     if (data.headers.cookie) {
