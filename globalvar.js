@@ -7,8 +7,11 @@ global.db = require('mysql').createConnection({
     password: 'adminrootkl',
     database: 'onlinekefu'
 });
-db.connect();
+try {
+    db.connect();
+} catch (e) {
 
+}
 global.debug = function(obj) {
     console.log("--------------------------------------------------------------")
     console.log(obj);
