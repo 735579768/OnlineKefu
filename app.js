@@ -1,3 +1,8 @@
+/**
+ * 简单的在线管客服系统
+ * http://127.0.0.1:4000/admin.html
+ * http://127.0.0.1:4000/room/666666
+ */
 var //connect = require('connect'),
     express = require('express'),
     app = express(),
@@ -86,7 +91,7 @@ app.get('/room/:id?', function(request, response, next) {
                 room_id: id
             });
         } else {
-            response.send('error');
+            response.send('room no fount!');
         }
     });
 });
@@ -176,11 +181,11 @@ app.get('/', function(request, response, next) {
     //request.session.regenerate(function(err) {
     //
     //});
-    response.send('error');
+    response.send('');
 });
 
 app.all('*', function(request, response) {
-    response.send('error');
+    response.send('404 error');
 });
 
 
