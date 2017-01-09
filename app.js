@@ -139,18 +139,36 @@ app.post('/login.html', function(request, response, next) {
             request.session['kefu_id'] = rows[0]['kefu_id'];
             request.session['room_id'] = rows[0]['room_id'];
 
+            // request.session.cookie['nickname'] = rows[0]['name'];
+
             //一天后过期
             var hour = 3600000 * 24
             request.session.cookie.expires = new Date(Date.now() + hour)
             request.session.cookie.maxAge = hour
-            var mycookes = [
-                'username=' + request.session['username'],
-                'kefu_id=' + request.session['kefu_id'],
-                'nickname=' + request.session['nickname'],
-                'room_id=' + request.session['room_id']
-            ];
-            response.setHeader('Set-Cookie', serialize('username', request.session['username']));　 //response.writeHead(200);
-            response.redirect('/admin.html');
+            var mycookes = {
+                'username': request.session['username'],
+                'kefu_id': request.session['kefu_id'],
+                'nickname': request.session['nickname'],
+                'room_id': request.session['room_id']
+            };
+            debug(mycookes);
+            //设置cookie
+            for (var i in mycookes) {
+                response.cookie(i, mycookes[i], {
+                    expires: new Date(Date.now() + 3600 * 1000 * 24),
+                    httpOnly: true
+                });
+            }　
+            //response.writeHead(200);
+            // response.redirect('/admin.html');
+            sessionid = request.sessionID;
+            console.log(sessionid);
+            response.render('admin', {
+                room_id: request.session['room_id'],
+                nickname: request.session['nickname'],
+                kefu_id: request.session['kefu_id'],
+                username: request.session['username']
+            });
         } else {
             request.session['islogin'] = false;
             response.redirect('/login.html')
